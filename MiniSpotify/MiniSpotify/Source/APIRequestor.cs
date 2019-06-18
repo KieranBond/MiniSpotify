@@ -33,6 +33,8 @@ namespace MiniSpotify.API.Impl
             }
         }
 
+        public Action<FullTrack> m_onSongChanged;
+
         private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
         private string m_authFilePath = "\\Assets\\Files\\AuthorisePath.txt";
         //private string m_tokenFilePath = "\\Assets\\Files\\AuthToken.txt";
@@ -66,6 +68,7 @@ namespace MiniSpotify.API.Impl
             }
 
             AuthAPI();
+            
             //Authenticate();
         }
 
@@ -178,6 +181,9 @@ namespace MiniSpotify.API.Impl
                 {
                     SimpleTrack lastSong = history.Items[0].Track;
                     m_spotifyWebAPI.ResumePlayback("", "", uris: new List<string> { "spotify:track:"+lastSong.Id }, "", 0);
+
+                    FullTrack latestSong = m_spotifyWebAPI.GetTrack(lastSong.Id);
+                    m_instance.m_onSongChanged.Invoke(latestSong);
                 }
             }
 
@@ -193,6 +199,9 @@ namespace MiniSpotify.API.Impl
                     m_spotifyWebAPI.SkipPlaybackToNext();
                 else
                     m_spotifyWebAPI.SkipPlaybackToPrevious();
+
+                FullTrack latestSong = m_spotifyWebAPI.GetPlayback().Item;
+                m_instance.m_onSongChanged.Invoke(latestSong);
 
                 return true;
             }

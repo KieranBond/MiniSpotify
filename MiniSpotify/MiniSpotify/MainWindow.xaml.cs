@@ -1,5 +1,6 @@
 ﻿using MiniSpotify.API.Base;
 using MiniSpotify.API.Impl;
+using SpotifyAPI.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,28 +23,31 @@ namespace MiniSpotify
     /// </summary>
     public partial class MainWindow : Window
     {
-        private APIRequestor m_apiRequestor;
         public MainWindow()
         {
             InitializeComponent();
 
-            //m_apiRequestor = new APIRequestor();
-            //m_apiRequestor.Initialise();
+            APIRequestor.Instance.m_onSongChanged += OnSongChanged;
+        }
+
+        private void OnSongChanged(FullTrack a_latestTrackPlaying)
+        {
+            //Update the information shown about current song.
+            Console.WriteLine(a_latestTrackPlaying.Album.Name);
         }
 
         public void OnClickPlay(object a_sender, RoutedEventArgs a_args)
         {
             APIRequestor.Instance.ResumePlayback();
+        }
 
-            //Send our API request for what is playing.
-            //Task<string> request = m_apiRequestor.Request("", REST.GET);
-            //if(request != null)
-            //{
-            //    request.Wait();//Wait for it to return.
-            //
-            //    string reqContent = request.Result;
-            //    Console.WriteLine(reqContent);
-            //}
+        public void OnClickNextSong(object a_sender, RoutedEventArgs a_args)
+        {
+            APIRequestor.Instance.SkipSongPlayback(true);
+        }
+        public void OnClickPreviousSong(object a_sender, RoutedEventArgs a_args)
+        {
+            APIRequestor.Instance.SkipSongPlayback(false);
         }
     }
 }
