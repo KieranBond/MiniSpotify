@@ -34,6 +34,7 @@ namespace MiniSpotify.API.Impl
         }
 
         public Action<FullTrack> m_onSongChanged;
+        private int m_songChangePollDelayMS = 10000;//10 seconds
 
         private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
         private string m_authFilePath = "\\Assets\\Files\\AuthorisePath.txt";
@@ -46,7 +47,7 @@ namespace MiniSpotify.API.Impl
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
-        private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed;
+        private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed | Scope.UserReadCurrentlyPlaying | Scope.UserReadPlaybackState;
         private HttpClient m_webClient;
         private static SpotifyWebAPI m_spotifyWebAPI;
         private Token m_authToken;
@@ -54,7 +55,7 @@ namespace MiniSpotify.API.Impl
         public void Initialise()
         {
             m_instance = new APIRequestor();
-            //m_instance.m_webClient = new HttpClient();
+
             string webBase = FileHelper.GetFileText(m_baseFilePath);
             if(webBase != null && !string.IsNullOrEmpty(webBase))
             {
@@ -68,8 +69,6 @@ namespace MiniSpotify.API.Impl
             }
 
             AuthAPI();
-            
-            //Authenticate();
         }
 
         private async void AuthAPI()
@@ -103,6 +102,8 @@ namespace MiniSpotify.API.Impl
                         AccessToken = m_instance.m_authToken.AccessToken,
                         UseAuth = true
                     };
+
+                    Task.Run(PollSongChange);//Start the song change polling
                 };
 
                 auth.Start();//Starts an internal http server
@@ -180,10 +181,16 @@ namespace MiniSpotify.API.Impl
                 else if (history.Items.Count > 0)
                 {
                     SimpleTrack lastSong = history.Items[0].Track;
-                    m_spotifyWebAPI.ResumePlayback("", "", uris: new List<string> { "spotify:track:"+lastSong.Id }, "", 0);
+                    ErrorResponse e = m_spotifyWebAPI.ResumePlayback("", "", uris: new List<string> { lastSong.Uri }, "", 0);
 
-                    FullTrack latestSong = m_spotifyWebAPI.GetTrack(lastSong.Id);
-                    m_instance.m_onSongChanged.Invoke(latestSong);
+                    if(e.HasError())
+                    {
+                        Console.WriteLine(e.Error.Message);
+                    }
+
+                    //Removed this, as our polling will detect it.
+                    //FullTrack latestSong = m_spotifyWebAPI.GetTrack(lastSong.Id);
+                    //m_instance.m_onSongChanged.Invoke(latestSong);
                 }
             }
 
@@ -227,6 +234,30 @@ namespace MiniSpotify.API.Impl
                     return null;
                 }
             }
+        }
+
+        private async void PollSongChange()
+        {
+            //FullTrack lastTrack = m_spotifyWebAPI.GetPlayback().Item;
+            FullTrack lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+            while (m_spotifyWebAPI != null)
+            {
+                //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
+                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                {
+                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
+                }
+                FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+                if (lastTrack.Id != currentTrack.Id)
+                {
+                    m_instance.m_onSongChanged(currentTrack);
+                    lastTrack = currentTrack;
+                }
+
+                await Task.Delay(m_songChangePollDelayMS);
+            }
+
+
         }
     }
 }
