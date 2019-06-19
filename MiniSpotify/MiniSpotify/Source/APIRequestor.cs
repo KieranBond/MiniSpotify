@@ -57,13 +57,13 @@ namespace MiniSpotify.API.Impl
             m_instance = new APIRequestor();
 
             string webBase = FileHelper.GetFileText(m_baseFilePath);
-            if(webBase != null && !string.IsNullOrEmpty(webBase))
+            if (webBase != null && !string.IsNullOrEmpty(webBase))
             {
                 m_instance.m_baseURL = webBase;
             }
 
             string authBase = FileHelper.GetFileText(m_authFilePath);
-            if(authBase != null && !string.IsNullOrEmpty(authBase))
+            if (authBase != null && !string.IsNullOrEmpty(authBase))
             {
                 m_instance.m_authURL = authBase;
             }
@@ -156,7 +156,7 @@ namespace MiniSpotify.API.Impl
 
         public void Close()
         {
-            if(m_instance.m_webClient != null)
+            if (m_instance.m_webClient != null)
             {
                 m_instance.m_webClient.Dispose();
                 m_instance.m_webClient = null;
@@ -169,28 +169,34 @@ namespace MiniSpotify.API.Impl
         public bool ResumePlayback()
         {
             //See if they're already listening to music.
-            if(!m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
+            if (!m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
             {
                 //Get their last played track
                 CursorPaging<PlayHistory> history = m_spotifyWebAPI.GetUsersRecentlyPlayedTracks();
-                if(history.HasError())
+                if (history.HasError())
                 {
                     Console.WriteLine(history.Error.ToString());
                     return false;
                 }
                 else if (history.Items.Count > 0)
                 {
-                    SimpleTrack lastSong = history.Items[0].Track;
-                    ErrorResponse e = m_spotifyWebAPI.ResumePlayback("", "", uris: new List<string> { lastSong.Uri }, "", 0);
-
-                    if(e.HasError())
+                    //By not setting any variables, we continue playback from the last playlist, with the 
+                    //last song listened to. 
+                    ErrorResponse e = m_spotifyWebAPI.ResumePlayback("", "", null, "", 0);
+                    if (e.HasError())
                     {
                         Console.WriteLine(e.Error.Message);
                     }
+                    else
+                    {
+                        //Let whatever wants to know that the song has 'changed'.
+                        //Because technically it hasn't, our polling method won't pick this up.
+                        //But anything wanting to know about this, won't be told there's a song playing 
+                        //so we'll trigger this ourself.
+                        FullTrack lastSong = m_spotifyWebAPI.GetTrack(history.Items[0].Track.Id);
+                        m_instance.m_onSongChanged.Invoke(lastSong);
+                    }
 
-                    //Removed this, as our polling will detect it.
-                    //FullTrack latestSong = m_spotifyWebAPI.GetTrack(lastSong.Id);
-                    //m_instance.m_onSongChanged.Invoke(latestSong);
                 }
             }
 
@@ -221,7 +227,7 @@ namespace MiniSpotify.API.Impl
             // dispose it when done, so the app doesn't leak resources
             using (m_instance.m_webClient)
             {
-                string uri =  rest + "" + m_baseURL + "/" + a_reqPath;
+                string uri = rest + "" + m_baseURL + "/" + a_reqPath;
                 // Call asynchronous network methods in a try/catch block to handle exceptions
                 try
                 {
@@ -243,7 +249,7 @@ namespace MiniSpotify.API.Impl
             while (m_spotifyWebAPI != null)
             {
                 //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
-                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                if (m_spotifyWebAPI.GetPlayingTrack().HasError())
                 {
                     Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
                 }
