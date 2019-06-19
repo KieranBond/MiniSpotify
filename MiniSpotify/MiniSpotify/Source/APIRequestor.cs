@@ -111,49 +111,6 @@ namespace MiniSpotify.API.Impl
             }
         }
 
-        //My one.. Might work now if we use local host, but using the github lib instead for now
-        private async void Authenticate()
-        {
-            //https://developers.google.com/identity/protocols/OAuth2InstalledApp
-            //https://github.com/googlesamples/oauth-apps-for-windows/blob/master/OAuthDesktopApp/OAuthDesktopApp/
-
-            // Creates a redirect URI using an available port on the loopback address.
-            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");
-            string redirectURI = "http://www.kieranbond.co.uk/minispotify/";
-            //string redirectURI = string.Format("http://{0}:{1}", IPAddress.Loopback, GetRandomUnusedPort());
-            string rest = FileHelper.GetRestString(REST.GET);
-
-            // Creates an HttpListener to listen for requests on that redirect URI.
-            HttpListener redirectListener = new HttpListener();
-            redirectListener.Prefixes.Add(redirectURI);
-            redirectListener.Start();
-            //We need to be running in Admin mode for this request
-            //to work - Otherwise we get an exception.
-            //https://stackoverflow.com/questions/4019466/httplistener-access-denied
-
-            string requestURI = string.Format("{0}?client_id={1}&response_type=code&" +
-                "redirect_uri={2}&scope={3}", m_authURL, m_clientID, redirectURI, m_accessScopes);
-            string restedRequestURI = rest + " " + requestURI;
-
-            // Opens request in the browser.
-            Process.Start(requestURI);
-
-            // Waits for the OAuth authorization response.
-            var context = await redirectListener.GetContextAsync();
-            string code = context.Request.QueryString.Get("code");
-            Console.WriteLine("Code: " + code);
-            redirectListener.Stop();
-            //var response = context.Response;
-            //var responseStream = response.OutputStream;
-            //Task responseTask = responseStream.WriteAsync(buffer, 0, buffer.Length).ContinueWith((task) =>
-            //{
-            //    responseStream.Close();
-            //    redirectListener.Stop();
-            //    Console.WriteLine("HTTP server stopped.");
-            //});
-
-        }
-
         public void Close()
         {
             if (m_instance.m_webClient != null)
@@ -221,6 +178,30 @@ namespace MiniSpotify.API.Impl
             return false;
         }
 
+        private async void PollSongChange()
+        {
+            //FullTrack lastTrack = m_spotifyWebAPI.GetPlayback().Item;
+            FullTrack lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+            while (m_spotifyWebAPI != null)
+            {
+                //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
+                if (m_spotifyWebAPI.GetPlayingTrack().HasError())
+                {
+                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
+                }
+                FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+                if (lastTrack.Id != currentTrack.Id)
+                {
+                    m_instance.m_onSongChanged(currentTrack);
+                    lastTrack = currentTrack;
+                }
+
+                await Task.Delay(m_songChangePollDelayMS);
+            }
+        }
+
+        #region Our own API implement - Not using until fully functional.
+
         public async Task<string> Request(string a_reqPath, REST a_type = REST.GET)
         {
             string rest = FileHelper.GetRestString(a_type);
@@ -242,28 +223,50 @@ namespace MiniSpotify.API.Impl
             }
         }
 
-        private async void PollSongChange()
+
+        //My one.. Might work now if we use local host, but using the github lib instead for now
+        private async void Authenticate()
         {
-            //FullTrack lastTrack = m_spotifyWebAPI.GetPlayback().Item;
-            FullTrack lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
-            while (m_spotifyWebAPI != null)
-            {
-                //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
-                if (m_spotifyWebAPI.GetPlayingTrack().HasError())
-                {
-                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
-                }
-                FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
-                if (lastTrack.Id != currentTrack.Id)
-                {
-                    m_instance.m_onSongChanged(currentTrack);
-                    lastTrack = currentTrack;
-                }
+            //https://developers.google.com/identity/protocols/OAuth2InstalledApp
+            //https://github.com/googlesamples/oauth-apps-for-windows/blob/master/OAuthDesktopApp/OAuthDesktopApp/
 
-                await Task.Delay(m_songChangePollDelayMS);
-            }
+            // Creates a redirect URI using an available port on the loopback address.
+            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");
+            string redirectURI = "http://www.kieranbond.co.uk/minispotify/";
+            //string redirectURI = string.Format("http://{0}:{1}", IPAddress.Loopback, GetRandomUnusedPort());
+            string rest = FileHelper.GetRestString(REST.GET);
 
+            // Creates an HttpListener to listen for requests on that redirect URI.
+            HttpListener redirectListener = new HttpListener();
+            redirectListener.Prefixes.Add(redirectURI);
+            redirectListener.Start();
+            //We need to be running in Admin mode for this request
+            //to work - Otherwise we get an exception.
+            //https://stackoverflow.com/questions/4019466/httplistener-access-denied
+
+            string requestURI = string.Format("{0}?client_id={1}&response_type=code&" +
+                "redirect_uri={2}&scope={3}", m_authURL, m_clientID, redirectURI, m_accessScopes);
+            string restedRequestURI = rest + " " + requestURI;
+
+            // Opens request in the browser.
+            Process.Start(requestURI);
+
+            // Waits for the OAuth authorization response.
+            var context = await redirectListener.GetContextAsync();
+            string code = context.Request.QueryString.Get("code");
+            Console.WriteLine("Code: " + code);
+            redirectListener.Stop();
+            //var response = context.Response;
+            //var responseStream = response.OutputStream;
+            //Task responseTask = responseStream.WriteAsync(buffer, 0, buffer.Length).ContinueWith((task) =>
+            //{
+            //    responseStream.Close();
+            //    redirectListener.Stop();
+            //    Console.WriteLine("HTTP server stopped.");
+            //});
 
         }
+
+        #endregion
     }
 }
