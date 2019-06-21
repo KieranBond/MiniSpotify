@@ -36,9 +36,9 @@ namespace MiniSpotify
             Console.WriteLine(a_latestTrackPlaying.Album.Name);
         }
 
-        public void OnClickPlay(object a_sender, RoutedEventArgs a_args)
+        public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)
         {
-            APIRequestor.Instance.ResumePlayback();
+            APIRequestor.Instance.ModifyPlayback();
         }
 
         public void OnClickNextSong(object a_sender, RoutedEventArgs a_args)

@@ -134,11 +134,25 @@ namespace MiniSpotify.API.Impl
             
         }
 
-        public bool ResumePlayback()
+        public bool ModifyPlayback()
         {
             //See if they're already listening to music.
-            if (!m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
+            if (m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
             {
+                //Already listening to music, we'll modify and pause it
+                ErrorResponse e = m_spotifyWebAPI.PausePlayback();
+
+                if(e.HasError())
+                {
+                    Console.WriteLine(e.Error.Message);
+                    return false;
+                }
+
+                return true;
+            }
+            else
+            {
+                //Not currently listening, so let's get it resumed
                 //Get their last played track
                 CursorPaging<PlayHistory> history = m_spotifyWebAPI.GetUsersRecentlyPlayedTracks();
                 if (history.HasError())
@@ -166,6 +180,7 @@ namespace MiniSpotify.API.Impl
                     }
 
                 }
+
             }
 
             return true;

@@ -9,7 +9,7 @@
     <Grid Background="#FF343434">
         <Button Name="btn2" 
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlay" ClickMode="Press" HorizontalAlignment="Right" Width="86" Height="33" VerticalAlignment="Top" Margin="0,30,10,0">
+        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="86" Height="33" VerticalAlignment="Top" Margin="0,30,10,0">
             <Button.Background>
                 <ImageBrush ImageSource="Assets/Images/PlayButton.png" Stretch="Uniform"/>
             </Button.Background>
