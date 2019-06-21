@@ -217,7 +217,11 @@ namespace MiniSpotify.API.Impl
                 }
                 FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
                 
-                if(lastTrack.HasError() || currentTrack.HasError())
+                if(lastTrack == null && currentTrack == null)
+                {
+                    //Do nothing
+                }
+                else if(lastTrack.HasError() || currentTrack.HasError())
                 {
                     //Do something about error?
                 }
