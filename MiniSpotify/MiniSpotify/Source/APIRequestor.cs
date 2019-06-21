@@ -33,6 +33,8 @@ namespace MiniSpotify.API.Impl
             }
         }
 
+        private Task m_pollingTask;
+
         public Action<FullTrack> m_onSongChanged;
         private int m_songChangePollDelayMS = 10000;//10 seconds
 
@@ -103,7 +105,7 @@ namespace MiniSpotify.API.Impl
                         UseAuth = true
                     };
 
-                    Task.Run(PollSongChange);//Start the song change polling
+                    m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
                 };
 
                 auth.Start();//Starts an internal http server
@@ -113,14 +115,23 @@ namespace MiniSpotify.API.Impl
 
         public void Close()
         {
+            //Dispose of anything we need to
             if (m_instance.m_webClient != null)
             {
                 m_instance.m_webClient.Dispose();
                 m_instance.m_webClient = null;
             }
 
+            if(m_pollingTask != null)
+            {
+                m_pollingTask.Dispose();
+                m_pollingTask = null;
+            }
+
             m_spotifyWebAPI.Dispose();
             m_spotifyWebAPI = null;
+
+            
         }
 
         public bool ResumePlayback()
@@ -190,8 +201,14 @@ namespace MiniSpotify.API.Impl
                     Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
                 }
                 FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
-                if (lastTrack.Id != currentTrack.Id)
+                
+                if(lastTrack.HasError() || currentTrack.HasError())
                 {
+                    //Do something about error?
+                }
+                else if ((lastTrack == null && currentTrack != null) || lastTrack.Id != currentTrack.Id)
+                {
+                    //If the two track objs are different
                     m_instance.m_onSongChanged(currentTrack);
                     lastTrack = currentTrack;
                 }
