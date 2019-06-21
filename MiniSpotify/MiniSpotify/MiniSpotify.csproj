@@ -129,5 +129,8 @@
   <ItemGroup>
     <Resource Include="Assets\Images\NextSongButton.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Files\ClientSecret.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

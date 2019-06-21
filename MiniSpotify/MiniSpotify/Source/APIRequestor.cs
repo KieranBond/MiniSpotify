@@ -45,7 +45,8 @@ namespace MiniSpotify.API.Impl
         private string m_authURL = default;
 
         private string m_clientID = "93f2598a9eaf4056b34f7b5ca254ff17";
-        private string m_clientSecret = "e39c12c66fa249cea93c3015619346f5";
+        private string m_clientSecret = "";
+        private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
@@ -70,6 +71,12 @@ namespace MiniSpotify.API.Impl
                 m_instance.m_authURL = authBase;
             }
 
+            string secret = FileHelper.GetFileText(m_clientSecretPath);
+            if(!string.IsNullOrEmpty(secret))
+            {
+                m_instance.m_clientSecret = secret;
+            }
+
             AuthAPI();
         }
 
@@ -82,6 +89,8 @@ namespace MiniSpotify.API.Impl
             if (m_instance.m_authToken == null || m_instance.m_authToken.IsExpired())
             {
                 string redirectURI = "http://localhost:4002";
+
+
 
                 AuthorizationCodeAuth auth = new AuthorizationCodeAuth(
                             m_instance.m_clientID,
