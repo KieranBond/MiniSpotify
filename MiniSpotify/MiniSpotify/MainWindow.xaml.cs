@@ -49,5 +49,10 @@ namespace MiniSpotify
         {
             APIRequestor.Instance.SkipSongPlayback(false);
         }
+
+        private void UpdateDisplayImage()
+        {
+
+        }
     }
 }
