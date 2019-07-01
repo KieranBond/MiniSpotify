@@ -36,6 +36,8 @@ namespace MiniSpotify.API.Impl
         private Task m_pollingTask;
 
         public Action<FullTrack> m_onSongChanged;
+        public Action<FullTrack> m_onAuthComplete;
+
         private int m_songChangePollDelayMS = /*10000*/5000;//10 seconds
 
         private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
@@ -114,7 +116,9 @@ namespace MiniSpotify.API.Impl
                         UseAuth = true
                     };
 
-                    m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
+                    m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
+
+                    m_instance.m_onAuthComplete.Invoke(GetLatestTrack());
                 };
 
                 auth.Start();//Starts an internal http server
@@ -143,7 +147,7 @@ namespace MiniSpotify.API.Impl
             
         }
 
-        public bool ModifyPlayback()
+        public void ModifyPlayback()
         {
             //See if they're already listening to music.
             if (m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
@@ -155,8 +159,6 @@ namespace MiniSpotify.API.Impl
                 {
                     Console.WriteLine(e.Error.Message);
                 }
-
-                return false;
             }
             else
             {
@@ -175,6 +177,20 @@ namespace MiniSpotify.API.Impl
                     if (e.HasError())
                     {
                         Console.WriteLine(e.Error.Message);
+
+                        if (e.Error.Status == 404)
+                        {
+                            List<Device> devices = m_spotifyWebAPI.GetDevices().Devices;
+
+                            for (int i = 0; i < devices.Count; i++)
+                            {
+                                if (devices[i].IsRestricted == false)
+                                {
+                                    m_spotifyWebAPI.ResumePlayback(devices[i].Id, "", null, "", 0);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -186,12 +202,8 @@ namespace MiniSpotify.API.Impl
                         m_instance.m_onSongChanged.Invoke(lastSong);
 
                     }
-
                 }
-
-                return true;
             }
-
         }
 
         public bool SkipSongPlayback(bool a_nextSong = true)
@@ -212,6 +224,15 @@ namespace MiniSpotify.API.Impl
             return false;
         }
 
+        public string GetSongArtwork(string a_trackID)
+        {
+            if(m_spotifyWebAPI != null)
+            {
+                return m_spotifyWebAPI.GetTrack(a_trackID).Album.Images[0].Url;
+            }
+
+            return null;
+        }
         public string GetCurrentSongArtwork()
         {
             string imageURL = null;
@@ -231,13 +252,17 @@ namespace MiniSpotify.API.Impl
             return imageURL;
         }
 
-        public FullTrack GetCurrentTrack()
+        public FullTrack GetLatestTrack()
         {
             if(m_spotifyWebAPI != null)
             {
-                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                if(!m_spotifyWebAPI.GetPlayback().IsPlaying)
                 {
-                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
+                    if(m_spotifyWebAPI.GetUsersRecentlyPlayedTracks().Error == null)
+                    {
+                        CursorPaging<PlayHistory> history = m_spotifyWebAPI.GetUsersRecentlyPlayedTracks();
+                        return m_spotifyWebAPI.GetTrack(history.Items[0].Track.Id);
+                    }
                 }
                 else
                 {
@@ -245,6 +270,16 @@ namespace MiniSpotify.API.Impl
                 }
             }
             return null;
+        }
+
+        public bool GetIsPlaying()
+        {
+            if(m_spotifyWebAPI != null)
+            {
+                return m_spotifyWebAPI.GetPlayback().IsPlaying;
+            }
+
+            return false;
         }
 
         private async void PollSongChange()
