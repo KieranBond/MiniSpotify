@@ -36,7 +36,7 @@ namespace MiniSpotify.API.Impl
         private Task m_pollingTask;
 
         public Action<FullTrack> m_onSongChanged;
-        private int m_songChangePollDelayMS = 10000;//10 seconds
+        private int m_songChangePollDelayMS = /*10000*/5000;//10 seconds
 
         private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
         private string m_authFilePath = "\\Assets\\Files\\AuthorisePath.txt";
@@ -154,10 +154,9 @@ namespace MiniSpotify.API.Impl
                 if(e.HasError())
                 {
                     Console.WriteLine(e.Error.Message);
-                    return false;
                 }
 
-                return true;
+                return false;
             }
             else
             {
@@ -167,7 +166,6 @@ namespace MiniSpotify.API.Impl
                 if (history.HasError())
                 {
                     Console.WriteLine(history.Error.ToString());
-                    return false;
                 }
                 else if (history.Items.Count > 0)
                 {
@@ -186,13 +184,14 @@ namespace MiniSpotify.API.Impl
                         //so we'll trigger this ourself.
                         FullTrack lastSong = m_spotifyWebAPI.GetTrack(history.Items[0].Track.Id);
                         m_instance.m_onSongChanged.Invoke(lastSong);
+
                     }
 
                 }
 
+                return true;
             }
 
-            return true;
         }
 
         public bool SkipSongPlayback(bool a_nextSong = true)
@@ -230,6 +229,22 @@ namespace MiniSpotify.API.Impl
             }
 
             return imageURL;
+        }
+
+        public FullTrack GetCurrentTrack()
+        {
+            if(m_spotifyWebAPI != null)
+            {
+                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                {
+                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
+                }
+                else
+                {
+                    return m_spotifyWebAPI.GetPlayingTrack().Item;
+                }
+            }
+            return null;
         }
 
         private async void PollSongChange()

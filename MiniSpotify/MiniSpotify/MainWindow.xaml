@@ -15,11 +15,11 @@
                 <ImageBrush ImageSource="Assets/Design/muse.jpg" Stretch="UniformToFill"/>
             </Image.OpacityMask>
         </Image>
-
+        <TextBlock Name="TitleText" Margin="92,6,10,74" FontFamily="Lato" FontSize="18">Lato Regular 18pt Title</TextBlock>
         <Button Name="ProgressBar" Width="400" Height="10" Margin="0,90,0,0" Background="#5b5b5b"/>
         <Button Name="PlaybackButton" 
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,125,0">
+        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
             <Button.Background>
                 <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
             </Button.Background>
@@ -46,12 +46,13 @@
                 <ImageBrush ImageSource="Assets/Images/Icons/back-icon.png" Stretch="Uniform"/>
             </Button.Background>
         </Button>
-        <Button x:Name="PauseButton" 
+        <Button x:Name="PauseButton" IsEnabled="False" Visibility="Hidden"
             BorderBrush="Black" BorderThickness="0" 
             Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
             <Button.Background>
                 <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
             </Button.Background>
         </Button>
+        <TextBlock Name="ArtistText" Margin="92,26,10,54" FontFamily="Lato Light" FontSize="14"><Run Text="Lato Light 14pt Artist"/></TextBlock>
     </Grid>
 </Window>
