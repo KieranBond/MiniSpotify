@@ -213,6 +213,25 @@ namespace MiniSpotify.API.Impl
             return false;
         }
 
+        public string GetCurrentSongArtwork()
+        {
+            string imageURL = null;
+
+            if(m_spotifyWebAPI != null)
+            {
+                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                {
+                    //Error something
+                }
+                else
+                {
+                    imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
+                }
+            }
+
+            return imageURL;
+        }
+
         private async void PollSongChange()
         {
             //FullTrack lastTrack = m_spotifyWebAPI.GetPlayback().Item;

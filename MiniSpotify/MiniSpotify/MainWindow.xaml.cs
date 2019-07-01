@@ -34,6 +34,14 @@ namespace MiniSpotify
         {
             //Update the information shown about current song.
             Console.WriteLine(a_latestTrackPlaying.Album.Name);
+
+            string artworkURL = APIRequestor.Instance.GetCurrentSongArtwork();
+            if(!string.IsNullOrEmpty(artworkURL))
+            {
+                BitmapImage bmpImg = new BitmapImage(new Uri(artworkURL, UriKind.Absolute));
+                AlbumArtworkImage.Source = bmpImg;
+            }
+
         }
 
         public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)

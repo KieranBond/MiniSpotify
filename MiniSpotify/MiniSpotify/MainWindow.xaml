@@ -7,35 +7,50 @@
         mc:Ignorable="d"
         Title="Mini-Viewer" Height="130" Width="405" ResizeMode="NoResize">
     <Grid Background="#232322" Height="100" Width="400">
-        <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,0,0,12"/>
+        <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,0,0,12" Stretch="Fill">
+            <Image.Source>
+                <BitmapImage UriSource="Assets/Design/muse.jpg"/>
+            </Image.Source>
+            <Image.OpacityMask>
+                <ImageBrush ImageSource="Assets/Design/muse.jpg" Stretch="UniformToFill"/>
+            </Image.OpacityMask>
+        </Image>
+
         <Button Name="ProgressBar" Width="400" Height="10" Margin="0,90,0,0" Background="#5b5b5b"/>
         <Button Name="PlaybackButton" 
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="86" Height="86" VerticalAlignment="Top" Margin="0,0,10,0">
+        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,125,0">
             <Button.Background>
-                <ImageBrush ImageSource="Assets/Images/PlayButton.png" Stretch="Uniform"/>
+                <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
             </Button.Background>
         </Button>
         <Button Name="NextSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="86" Height="86" VerticalAlignment="Top" Margin="0,0,121,0">
+        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,60,60,0">
             <Button.Background>
-                <ImageBrush ImageSource="Assets/Images/NextSongButton.png" Stretch="Uniform"/>
+                <ImageBrush ImageSource="Assets/Images/Icons/forward-icon.png" Stretch="Uniform"/>
             </Button.Background>
         </Button>
         <Button Name="PreviousSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="86" Height="86" VerticalAlignment="Top" Margin="0,0,230,0" RenderTransformOrigin="0.5,0.5">
+        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,60,240,0">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-180"/>
+                    <RotateTransform Angle="-360"/>
                     <TranslateTransform/>
                 </TransformGroup>
             </Button.RenderTransform>
             <Button.Background>
-                <ImageBrush ImageSource="Assets/Images/NextSongButton.png" Stretch="Uniform"/>
+                <ImageBrush ImageSource="Assets/Images/Icons/back-icon.png" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="PauseButton" 
+            BorderBrush="Black" BorderThickness="0" 
+            Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
+            <Button.Background>
+                <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
             </Button.Background>
         </Button>
     </Grid>
