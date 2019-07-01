@@ -198,7 +198,7 @@ namespace MiniSpotify.API.Impl
                         //Because technically it hasn't, our polling method won't pick this up.
                         //But anything wanting to know about this, won't be told there's a song playing 
                         //so we'll trigger this ourself.
-                        FullTrack lastSong = m_spotifyWebAPI.GetTrack(history.Items[0].Track.Id);
+                        FullTrack lastSong = m_spotifyWebAPI.GetPlayingTrack().Item;
                         m_instance.m_onSongChanged.Invoke(lastSong);
 
                     }
@@ -295,13 +295,8 @@ namespace MiniSpotify.API.Impl
                 }
                 FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
                 
-                if(currentTrack == null || currentTrack.HasError())
+                if(currentTrack != null)
                 {
-                    //Do something about error?
-                }
-                else if ((lastTrack == null && currentTrack != null) || lastTrack.Id != currentTrack.Id)
-                {
-                    //If the two track objs are different
                     m_instance.m_onSongChanged(currentTrack);
                     lastTrack = currentTrack;
                 }

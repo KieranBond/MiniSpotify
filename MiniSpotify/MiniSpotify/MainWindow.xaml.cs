@@ -81,9 +81,6 @@ namespace MiniSpotify
 
         private void OnSongChanged(FullTrack a_latestTrackPlaying)
         {
-            //Update the information shown about current song.
-            Console.WriteLine(a_latestTrackPlaying.Album.Name);
-
             string artworkURL = APIRequestor.Instance.GetCurrentSongArtwork();
             if (string.IsNullOrEmpty(artworkURL))
             {

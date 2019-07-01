@@ -134,9 +134,6 @@
     <Resource Include="Assets\Files\ClientSecret.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Design\muse.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Assets\Images\Icons\back-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -161,6 +158,9 @@
     <Content Include="Assets\Images\Icons\play-icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Design\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
