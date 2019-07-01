@@ -177,5 +177,22 @@ namespace MiniSpotify
                 }
             });
         }
+
+        #region Window Bar controls
+        private void OnClickClose(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Application.Current.MainWindow.DragMove();
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -5,7 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniSpotify"
         mc:Ignorable="d"
-        Title="Mini-Viewer" Height="130" Width="405" ResizeMode="NoResize" Topmost="True">
+        Title="Mini-Viewer" Height="130" Width="405" 
+        ResizeMode="NoResize" Topmost="True" BorderBrush="#232322" 
+        Background="#232322" FontFamily="Lato" WindowStyle="None">
+
+    <DockPanel Name="RootWindow">
+        <DockPanel Name="TitleBar" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown"
+                   Background="Transparent">
+            <Button Name="CloseButton"
+                Click="OnClickClose"
+                DockPanel.Dock="Right"
+                Content="&#xE106;"
+                Background="#232322" 
+                FontFamily="Segoe MDL2 Assets" Foreground="PaleVioletRed" BorderThickness="0"/>
+
+            <TextBlock HorizontalAlignment="Center" FontFamily="Segoe UI" Foreground="White">Mini Spotify</TextBlock>
+        </DockPanel>
+
     <Grid Background="#232322" Height="100" Width="400">
         <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,0,0,12" Stretch="Fill" OpacityMask="{x:Null}">
             <Image.Source>
@@ -52,4 +68,5 @@
         </Button>
         <TextBlock Name="ArtistText" Margin="92,26,10,54" FontFamily="Lato Light" Foreground="White" FontSize="14"><Run Text=""/></TextBlock>
     </Grid>
+    </DockPanel>
 </Window>

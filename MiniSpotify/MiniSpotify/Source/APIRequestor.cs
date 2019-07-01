@@ -237,7 +237,7 @@ namespace MiniSpotify.API.Impl
         {
             string imageURL = null;
 
-            if(m_spotifyWebAPI != null)
+            if(m_spotifyWebAPI != null && m_spotifyWebAPI.GetPlayback().IsPlaying)
             {
                 if(m_spotifyWebAPI.GetPlayingTrack().HasError())
                 {
