@@ -34,6 +34,7 @@ namespace MiniSpotify
 
             APIRequestor.Instance.m_onSongChanged += OnSongChanged;
             APIRequestor.Instance.m_onAuthComplete += UpdateUI;
+            APIRequestor.Instance.m_onAPIPolled += UpdateProgressBar;
         }
 
         public void UpdateUI(FullTrack a_latestTrack = null)
@@ -152,6 +153,15 @@ namespace MiniSpotify
                 });
 
             }
+        }
+
+        private void UpdateProgressBar(float a_progress)
+        {
+            a_progress = 100 * a_progress;
+            this.Dispatcher.Invoke(() =>
+            {
+                SongProgress.Value = a_progress;
+            });
         }
 
         private void UpdatePlayIcon(bool a_isPlaying)

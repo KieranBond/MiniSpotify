@@ -37,8 +37,9 @@ namespace MiniSpotify.API.Impl
 
         public Action<FullTrack> m_onSongChanged;
         public Action<FullTrack> m_onAuthComplete;
+        public Action<float> m_onAPIPolled;
 
-        private int m_songChangePollDelayMS = /*10000*/5000;//10 seconds
+        private int m_songChangePollDelayMS = /*10000*/1000;//1 second
 
         private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
         private string m_authFilePath = "\\Assets\\Files\\AuthorisePath.txt";
@@ -284,8 +285,10 @@ namespace MiniSpotify.API.Impl
 
         private async void PollSongChange()
         {
-            //FullTrack lastTrack = m_spotifyWebAPI.GetPlayback().Item;
-            FullTrack lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+            FullTrack lastTrack = new FullTrack();
+            if(m_spotifyWebAPI != null)
+                lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+
             while (m_spotifyWebAPI != null)
             {
                 //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
@@ -297,8 +300,15 @@ namespace MiniSpotify.API.Impl
                 
                 if(currentTrack != null)
                 {
-                    m_instance.m_onSongChanged(currentTrack);
-                    lastTrack = currentTrack;
+                    if(lastTrack != null && currentTrack != lastTrack)
+                    {
+                        m_instance.m_onSongChanged(currentTrack);
+                        lastTrack = currentTrack;
+                    }
+
+                    float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
+
+                    m_instance.m_onAPIPolled(progress);
                 }
 
                 await Task.Delay(m_songChangePollDelayMS);
