@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniSpotify"
         mc:Ignorable="d"
-        Title="Mini-Viewer" Height="100" Width="400" 
+        Title="Mini-Viewer" Height="110" Width="400" 
         ResizeMode="NoResize" Topmost="True" BorderBrush="#232322" 
-        Background="#232322" FontFamily="Lato" WindowStyle="None">
+        Background="#232322" FontFamily="Lato" WindowStyle="None"
+        MouseDown="TitleBar_MouseDown">
 
     <DockPanel Name="RootWindow">
         <DockPanel Name="TitleBar" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown"
@@ -24,30 +25,30 @@
         </DockPanel>
 
         <Grid Background="#232322" Width="400">
-            <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,-7,0,0" Stretch="Fill" OpacityMask="{x:Null}" VerticalAlignment="Top">
+            <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,0,0,0" Stretch="Fill" OpacityMask="{x:Null}" VerticalAlignment="Top">
                 <Image.Source>
                     <BitmapImage UriSource=""/>
                 </Image.Source>
             </Image>
             <TextBlock Name="TitleText" Margin="92,0,10,61" FontFamily="Lato" FontSize="18" Foreground="White"></TextBlock>
-            <ProgressBar Name="SongProgress" Value="0" Width="400" Height="10" Margin="0,72.5,0,0" Background="#5b5b5b" Foreground="#e2d647" BorderThickness="0"/>
+            <ProgressBar Name="SongProgress" Value="0" Width="400" Height="10" Margin="0,84,0,0" Background="#5b5b5b" Foreground="#e2d647" BorderThickness="0"/>
             <Button Name="PlaybackButton" 
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,51,149,0">
+        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
             <Button Name="NextSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,51,60,0">
+        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,60,60,0">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/forward-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
             <Button Name="PreviousSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,50,239,0">
+        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,59,239,0">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -62,7 +63,7 @@
             </Button>
             <Button x:Name="PauseButton" IsEnabled="False" Visibility="Hidden"
             BorderBrush="Black" BorderThickness="0" 
-            Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,51,149,0">
+            Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
                 </Button.Background>
