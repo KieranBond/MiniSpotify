@@ -21,7 +21,20 @@
                 FontFamily="Segoe MDL2 Assets" 
                 Foreground="PaleVioletRed" 
                 BorderThickness="0"
-                Margin="0,2,2,0" RenderTransformOrigin="0,0.714" HorizontalAlignment="Right"/>
+                Margin="0,2,2,0" RenderTransformOrigin="0,0.714" HorizontalAlignment="Right">
+            </Button>
+            <Button Name="MinimiseButton"
+                Click="OnClickMinimise"
+                DockPanel.Dock="Right"
+                Content="&#xE949;"
+                Background="#232322"
+                Foreground="White"
+                FontFamily="Segoe MDL2 Assets"
+                BorderThickness="0"
+                Margin="0,2,2,0"
+                HorizontalAlignment="Right">
+                
+            </Button>
         </DockPanel>
 
         <Grid Background="#232322" Width="400">

@@ -101,6 +101,7 @@
     </ApplicationDefinition>
     <Compile Include="Source\APIRequestor.cs" />
     <Compile Include="Source\Helpers\FileHelper.cs" />
+    <Compile Include="Source\Helpers\LerpEaser.cs" />
     <Compile Include="Source\Interfaces\IAPIRequestor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

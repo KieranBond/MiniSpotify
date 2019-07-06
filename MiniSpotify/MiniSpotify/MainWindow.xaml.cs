@@ -202,6 +202,10 @@ namespace MiniSpotify
             }
         }
 
+        private void OnClickMinimise(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
         #endregion
 
     }
