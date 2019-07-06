@@ -1,25 +1,16 @@
-﻿using MiniSpotify.API.Base;
-using MiniSpotify.API.Impl;
+﻿using MiniSpotify.API.Impl;
 using SpotifyAPI.Web.Models;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+using ColorConverter = System.Windows.Media.ColorConverter;
+using Color = System.Windows.Media.Color;
 
 namespace MiniSpotify
 {
@@ -214,6 +205,16 @@ namespace MiniSpotify
             m_pinnedToTop = !m_pinnedToTop;
             Application.Current.MainWindow.Topmost = m_pinnedToTop;
         }
+
+        private void OnChangeWindowBackgroundColour(string a_colourHexCode)
+        {
+            if(string.IsNullOrEmpty(a_colourHexCode))
+            {
+                Color val = (Color)ColorConverter.ConvertFromString("#FFDFD991");
+                Application.Current.MainWindow.Background = new SolidColorBrush(val); ;
+            }
+        }
+
         #endregion
 
     }
