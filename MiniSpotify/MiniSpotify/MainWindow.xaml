@@ -37,15 +37,13 @@
             <Button Name="PinToTopButton"
                 Click="OnClickPinButton"
                 DockPanel.Dock="Right"
-                Content=""
-                Foreground="White"
                 FontFamily="Segoe MDL2 Assets"
                 BorderThickness="0"
                 Margin="0,2,2,0"
                 HorizontalAlignment="Right"
-                    Width="15">
+                Width="15">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon.png"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon-red.png"/>
                 </Button.Background>
 
             </Button>
