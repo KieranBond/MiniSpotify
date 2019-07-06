@@ -210,7 +210,7 @@ namespace MiniSpotify
         {
             if(string.IsNullOrEmpty(a_colourHexCode))
             {
-                Color val = (Color)ColorConverter.ConvertFromString("#FFDFD991");
+                Color val = (Color)ColorConverter.ConvertFromString(a_colourHexCode);
                 Application.Current.MainWindow.Background = new SolidColorBrush(val); ;
             }
         }
