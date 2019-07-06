@@ -164,6 +164,9 @@
     <Resource Include="Assets\Files\ClientSecret.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Images\Icons\pin-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\Icons\back-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

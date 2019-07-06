@@ -28,6 +28,8 @@ namespace MiniSpotify
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool m_pinnedToTop = true;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -205,6 +207,12 @@ namespace MiniSpotify
         private void OnClickMinimise(object sender, RoutedEventArgs e)
         {
             Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void OnClickPinButton(object sender, RoutedEventArgs e)
+        {
+            m_pinnedToTop = !m_pinnedToTop;
+            Application.Current.MainWindow.Topmost = m_pinnedToTop;
         }
         #endregion
 
