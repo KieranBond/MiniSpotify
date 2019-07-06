@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 using MiniSpotify.API.Base;
-using MiniSpotify.Source.Helpers;
+using MiniSpotify.HelperScripts;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Enums;

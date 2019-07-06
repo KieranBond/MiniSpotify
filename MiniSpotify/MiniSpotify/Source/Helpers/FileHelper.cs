@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniSpotify.Source.Helpers
+namespace MiniSpotify.HelperScripts
 {
     public static class FileHelper
     {

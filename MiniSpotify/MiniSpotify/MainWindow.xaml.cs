@@ -157,7 +157,7 @@ namespace MiniSpotify
 
         private void UpdateProgressBar(float a_progress)
         {
-            a_progress = 100 * a_progress;
+            a_progress = 100 * a_progress;//a_progress is normalized between 0-1, *100 so that it's between 0 - 100
             this.Dispatcher.Invoke(() =>
             {
                 SongProgress.Value = a_progress;
