@@ -35,9 +35,11 @@ namespace MiniSpotify.API.Impl
 
         private Task m_pollingTask;
 
+        private FullTrack m_latestTrack;
+
         public Action<FullTrack> m_onSongChanged;
         public Action<FullTrack> m_onAuthComplete;
-        public Action<float> m_onAPIPolled;
+        public Action<FullTrack> m_onAPIPolled;
 
         private int m_songChangePollDelayMS = /*10000*/1000;//1 second
 
@@ -257,20 +259,37 @@ namespace MiniSpotify.API.Impl
         {
             if(m_spotifyWebAPI != null)
             {
-                if(!m_spotifyWebAPI.GetPlayback().IsPlaying)
+                if (m_spotifyWebAPI.GetPlayback().IsPlaying || m_spotifyWebAPI.GetPlayingTrack().Item != null)
                 {
-                    if(m_spotifyWebAPI.GetUsersRecentlyPlayedTracks().Error == null)
+                    return m_spotifyWebAPI.GetPlayingTrack().Item;
+                }
+                else
+                {
+                    FullTrack latestTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+                    if (latestTrack != null)
+                    { 
+                        return latestTrack;
+                    }
+                    else if (m_spotifyWebAPI.GetUsersRecentlyPlayedTracks().Error == null)
                     {
                         CursorPaging<PlayHistory> history = m_spotifyWebAPI.GetUsersRecentlyPlayedTracks();
                         return m_spotifyWebAPI.GetTrack(history.Items[0].Track.Id);
                     }
                 }
-                else
-                {
-                    return m_spotifyWebAPI.GetPlayingTrack().Item;
-                }
             }
             return null;
+        }
+
+        public float GetLatestSongProgress()
+        {
+            if (m_spotifyWebAPI != null)
+            {
+                FullTrack currentTrack = Instance.GetLatestTrack();
+                float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
+                return progress;
+            }
+            else
+                return -1;
         }
 
         public bool GetIsPlaying()
@@ -284,32 +303,28 @@ namespace MiniSpotify.API.Impl
         }
 
         private async void PollSongChange()
-        {
-            FullTrack lastTrack = new FullTrack();
-            if(m_spotifyWebAPI != null)
-                lastTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
-
+        { 
             while (m_spotifyWebAPI != null)
             {
-                //FullTrack currentTrack = m_spotifyWebAPI.GetPlayback().Item;
-                if (m_spotifyWebAPI.GetPlayingTrack().HasError())
-                {
-                    Console.WriteLine(m_spotifyWebAPI.GetPlayingTrack().Error);
-                }
-                FullTrack currentTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
+                FullTrack currentTrack = m_instance.GetLatestTrack();
                 
                 if(currentTrack != null)
                 {
-                    if(lastTrack != null && currentTrack != lastTrack)
+                    if(m_instance.m_latestTrack == null)
                     {
                         m_instance.m_onSongChanged(currentTrack);
-                        lastTrack = currentTrack;
+                    }
+                    else if(currentTrack != m_instance.m_latestTrack)
+                    {
+                        m_instance.m_onSongChanged(currentTrack);
+                        m_instance.m_latestTrack = currentTrack;
                     }
 
-                    float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
-
-                    m_instance.m_onAPIPolled(progress);
+                    m_instance.m_onAPIPolled(currentTrack);
                 }
+
+                //Update for next time.
+                m_instance.m_latestTrack = m_instance.GetLatestTrack();
 
                 await Task.Delay(m_songChangePollDelayMS);
             }

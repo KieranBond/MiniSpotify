@@ -21,19 +21,31 @@ namespace MiniSpotify
     {
         private bool m_pinnedToTop = true;
 
+        private bool m_editWindowOpen = false;
+        private double m_editWindowGap = 10;
+        EditorWindow editWindow;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            editWindow = new EditorWindow();
+            editWindow.Hide();
+
             APIRequestor.Instance.m_onSongChanged += OnSongChanged;
             APIRequestor.Instance.m_onAuthComplete += UpdateUI;
-            APIRequestor.Instance.m_onAPIPolled += UpdateProgressBar;
+            APIRequestor.Instance.m_onAPIPolled += UpdateUI;
+
+            LocationChanged += UpdateEditWindowPosition;
         }
 
         public void UpdateUI(FullTrack a_latestTrack = null)
         {
             bool playing = APIRequestor.Instance.GetIsPlaying();
             UpdatePlayIcon(playing);
+
+            float progress = APIRequestor.Instance.GetLatestSongProgress();
+            UpdateProgressBar(progress);
 
             string artworkURL = APIRequestor.Instance.GetCurrentSongArtwork();
             if (string.IsNullOrEmpty(artworkURL))
@@ -114,6 +126,26 @@ namespace MiniSpotify
         {
             APIRequestor.Instance.SkipSongPlayback(false);
         }
+
+        public void OnClickEditorButton(object a_sender, RoutedEventArgs a_args)
+        {
+            m_editWindowOpen = !m_editWindowOpen;
+
+            if(m_editWindowOpen)
+            {
+                editWindow.Show();
+                double mainWidth = RootWindow.ActualWidth;
+                double editWindowX = Application.Current.MainWindow.Left + mainWidth;
+                double editWindowY = Application.Current.MainWindow.Top;
+                editWindow.Top = editWindowY;
+                editWindow.Left = editWindowX + m_editWindowGap;
+            }
+            else
+            {
+                editWindow.Hide();
+            }
+        }
+
         private async void UpdateDisplayImage(string a_artworkURL)
         {
             if (!string.IsNullOrEmpty(a_artworkURL))
@@ -180,6 +212,15 @@ namespace MiniSpotify
                 }
             });
         }
+        private void UpdateEditWindowPosition(object sender, EventArgs e)
+        {
+            double mainWidth = RootWindow.ActualWidth;
+            double editWindowX = Application.Current.MainWindow.Left + mainWidth;
+            double editWindowY = Application.Current.MainWindow.Top;
+            editWindow.Top = editWindowY;
+            editWindow.Left = editWindowX + m_editWindowGap;
+        }
+
 
         #region Window Bar controls
         private void OnClickClose(object sender, RoutedEventArgs e)

@@ -55,7 +55,7 @@
                     <BitmapImage UriSource=""/>
                 </Image.Source>
             </Image>
-            <TextBlock Name="TitleText" Margin="92,0,10,61" FontFamily="Lato" FontSize="18" Foreground="White"></TextBlock>
+            <TextBlock Name="TitleText" Margin="92,0,15,61" FontFamily="Lato" FontSize="18" Foreground="White"></TextBlock>
             <ProgressBar Name="SongProgress" Value="0" Width="400" Height="10" Margin="0,84,0,0" Background="#5b5b5b" Foreground="#e2d647" BorderThickness="0"/>
             <Button Name="PlaybackButton" 
         BorderBrush="Black" BorderThickness="0" 
@@ -93,7 +93,14 @@
                     <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <TextBlock Name="ArtistText" Margin="92,20,10,42" FontFamily="Lato Light" Foreground="White" FontSize="14"></TextBlock>
+            <TextBlock Name="ArtistText" Margin="92,20,15,42" FontFamily="Lato Light" Foreground="White" FontSize="14"></TextBlock>
+            <Button x:Name="EditorButton" 
+                BorderBrush="Black" BorderThickness="0" 
+                Click="OnClickEditorButton" ClickMode="Press" HorizontalAlignment="Right" Width="5" Height="15" VerticalAlignment="Top" Margin="0,29,5,0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
         </Grid>
     </DockPanel>
 </Window>
