@@ -102,13 +102,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="EditorWindow.xaml.cs">
-      <DependentUpon>EditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Source\APIRequestor.cs" />
+    <Compile Include="Source\App.xaml.cs" />
+    <Compile Include="Source\EditorWindow.xaml.cs" />
     <Compile Include="Source\Helpers\FileHelper.cs" />
     <Compile Include="Source\Helpers\LerpEaser.cs" />
     <Compile Include="Source\Interfaces\IAPIRequestor.cs" />
+    <Compile Include="Source\MainWindow.xaml.cs" />
     <Page Include="EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,14 +117,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -171,11 +163,6 @@
     <Resource Include="Assets\Images\NextSongButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assets\Files\ClientSecret.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="NoteMW.ico" />
     <Resource Include="NoteM.ico" />
     <Resource Include="Assets\Images\Icons\pin-icon.png">
@@ -183,6 +170,9 @@
     </Resource>
     <Resource Include="Assets\Images\Icons\back-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Files\ClientSecret.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="Assets\Images\Icons\back-icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

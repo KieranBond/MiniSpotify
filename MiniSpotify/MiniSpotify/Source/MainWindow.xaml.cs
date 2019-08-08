@@ -131,7 +131,8 @@ namespace MiniSpotify
         {
             m_editWindowOpen = !m_editWindowOpen;
 
-            if(m_editWindowOpen)
+
+            if (m_editWindowOpen)
             {
                 editWindow.Show();
                 double mainWidth = RootWindow.ActualWidth;
@@ -139,9 +140,25 @@ namespace MiniSpotify
                 double editWindowY = Application.Current.MainWindow.Top;
                 editWindow.Top = editWindowY;
                 editWindow.Left = editWindowX + m_editWindowGap;
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    //Update any UI in this block.
+                    RotateTransform rotateTransform = new RotateTransform(180);
+                    EditorButton.RenderTransform = rotateTransform;
+                });
+
+
             }
             else
             {
+                this.Dispatcher.Invoke(() =>
+                {
+                    //Update any UI in this block.
+                    RotateTransform rotateTransform = new RotateTransform(0);
+                    EditorButton.RenderTransform = rotateTransform;
+                });
+
                 editWindow.Hide();
             }
         }
