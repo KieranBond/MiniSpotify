@@ -211,15 +211,31 @@ namespace MiniSpotify.API.Impl
             }
         }
 
-        public bool SkipSongPlayback(bool a_nextSong = true)
+public bool SkipSongPlayback(bool a_nextSong = true)
         {
             //See if they're already listening to music.
             if (m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
             {
                 if (a_nextSong)
-                    m_spotifyWebAPI.SkipPlaybackToNext();
+                { try
+                    {
+                        m_spotifyWebAPI.SkipPlaybackToNext();
+                    }catch(ArgumentException e) // Spammed probaly the button
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                }
                 else
-                    m_spotifyWebAPI.SkipPlaybackToPrevious();
+                {
+                    try
+                    {
+                        m_spotifyWebAPI.SkipPlaybackToPrevious();
+                    }
+                    catch (ArgumentException e) // Spammed probaly the button
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                }
 
                 FullTrack latestSong = m_spotifyWebAPI.GetPlayback().Item;
                 m_instance.m_onSongChanged.Invoke(latestSong);
