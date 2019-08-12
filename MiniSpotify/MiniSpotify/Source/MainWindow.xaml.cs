@@ -51,8 +51,18 @@ namespace MiniSpotify
             if (string.IsNullOrEmpty(artworkURL))
             {
                 Console.WriteLine("No track playing. Getting last track.");
-
-                artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
+                try
+                {
+                    if (APIRequestor.Instance.GetLatestTrack().Id != null)
+                    {
+                        artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
+                        APIRequestor.t_id = artworkURL; //Setting the temp id to current one
+                    }
+                }catch(NullReferenceException e)// Internet connection Failure of not getting
+                {
+                    Console.WriteLine(e.StackTrace);
+                    artworkURL = APIRequestor.t_id; //Getting backup of last used id
+                }
                 artworkURL = APIRequestor.Instance.GetSongArtwork(artworkURL);//Get the artwork url
             }
 
