@@ -52,6 +52,8 @@ namespace MiniSpotify.API.Impl
         private string m_clientID = "93f2598a9eaf4056b34f7b5ca254ff17";
         private string m_clientSecret = "";
         private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
+        
+        private string t_albumimage = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
@@ -242,19 +244,16 @@ namespace MiniSpotify.API.Impl
 
             if(m_spotifyWebAPI != null && m_spotifyWebAPI.GetPlayback().IsPlaying)
             {
-                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                if(!m_spotifyWebAPI.GetPlayingTrack().HasError())
                 {
-                    //Error something
-                }
-                else
-                {
-                    bool isNotEmpty = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url.Any(); // Return of it have content
-                    if (isNotEmpty) // Check if it the images list have actually content
+                    try
                     {
-                        if (m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url != null) // Check if the URL is not empty
-                        {
-                            imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url; // Return Image URL
-                        }
+                        imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
+                        t_albumimage = imageURL; //Set it as 'backup'
+                    }catch(Exception e)
+                    {
+                        imageURL = t_albumimage; //Internet failure and get last time album as backup
+                        Console.WriteLine(e.StackTrace);
                     }
                 }
             }
