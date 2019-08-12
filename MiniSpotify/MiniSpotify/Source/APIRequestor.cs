@@ -307,9 +307,15 @@ public bool SkipSongPlayback(bool a_nextSong = true)
         {
             if (m_spotifyWebAPI != null)
             {
-                FullTrack currentTrack = Instance.GetLatestTrack();
-                float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
-                return progress;
+                try
+                {
+                    float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
+                    return progress;
+                }catch(NullReferenceException e) //Unexpected spotify closed
+                {
+                    Console.WriteLine(e.StackTrace);
+                    return -1;
+                }
             }
             else
                 return -1;
