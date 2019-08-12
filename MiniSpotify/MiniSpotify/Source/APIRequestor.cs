@@ -248,7 +248,14 @@ namespace MiniSpotify.API.Impl
                 }
                 else
                 {
-                    imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
+                    bool isNotEmpty = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url.Any(); // Return of it have content
+                    if (isNotEmpty) // Check if it the images list have actually content
+                    {
+                        if (m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url != null) // Check if the URL is not empty
+                        {
+                            imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url; // Return Image URL
+                        }
+                    }
                 }
             }
 
