@@ -53,7 +53,7 @@ namespace MiniSpotify.API.Impl
         private string m_clientSecret = "";
         private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
         
-        private string t_albumimage = "";
+        private string m_albumimage = "";
         public static string t_id = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
