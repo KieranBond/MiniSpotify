@@ -221,7 +221,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                 { try
                     {
                         m_spotifyWebAPI.SkipPlaybackToNext();
-                    }catch(ArgumentException e) // Spammed probaly the button
+                    }catch(ArgumentException e) // Spammed the button before the system could register it as event
                     {
                         Console.WriteLine(e.StackTrace);
                     }
@@ -232,7 +232,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                     {
                         m_spotifyWebAPI.SkipPlaybackToPrevious();
                     }
-                    catch (ArgumentException e) // Spammed probaly the button
+                    catch (ArgumentException e) // Spammed the button before the system could register it as event
                     {
                         Console.WriteLine(e.StackTrace);
                     }
@@ -266,10 +266,10 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                     try
                     {
                         imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
-                        t_albumimage = imageURL; //Set it as 'backup'
-                    }catch(Exception e)
+                        m_albumimage = imageURL; //Set it as 'backup'
+                    }catch(Exception e) // Returned a hard null and not normal null
                     {
-                        imageURL = t_albumimage; //Internet failure and get last time album as backup
+                        imageURL = t_albumimage;
                         Console.WriteLine(e.StackTrace);
                     }
                 }
