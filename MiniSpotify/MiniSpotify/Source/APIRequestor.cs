@@ -52,6 +52,8 @@ namespace MiniSpotify.API.Impl
         private string m_clientID = "93f2598a9eaf4056b34f7b5ca254ff17";
         private string m_clientSecret = "";
         private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
+        
+        private string m_albumimage = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
@@ -209,15 +211,31 @@ namespace MiniSpotify.API.Impl
             }
         }
 
-        public bool SkipSongPlayback(bool a_nextSong = true)
+public bool SkipSongPlayback(bool a_nextSong = true)
         {
             //See if they're already listening to music.
             if (m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
             {
                 if (a_nextSong)
-                    m_spotifyWebAPI.SkipPlaybackToNext();
+                { try
+                    {
+                        m_spotifyWebAPI.SkipPlaybackToNext();
+                    }catch(ArgumentException e) // Spammed the button before the system could register it as event
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                }
                 else
-                    m_spotifyWebAPI.SkipPlaybackToPrevious();
+                {
+                    try
+                    {
+                        m_spotifyWebAPI.SkipPlaybackToPrevious();
+                    }
+                    catch (ArgumentException e) // Spammed the button before the system could register it as event
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                }
 
                 FullTrack latestSong = m_spotifyWebAPI.GetPlayback().Item;
                 m_instance.m_onSongChanged.Invoke(latestSong);
@@ -242,13 +260,17 @@ namespace MiniSpotify.API.Impl
 
             if(m_spotifyWebAPI != null && m_spotifyWebAPI.GetPlayback().IsPlaying)
             {
-                if(m_spotifyWebAPI.GetPlayingTrack().HasError())
+                if(!m_spotifyWebAPI.GetPlayingTrack().HasError())
                 {
-                    //Error something
-                }
-                else
-                {
-                    imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
+                    try
+                    {
+                        imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
+                        m_albumimage = imageURL; //Set it as 'backup'
+                    }catch(Exception e) // Returned a hard null and not normal null
+                    {
+                        imageURL = t_albumimage;
+                        Console.WriteLine(e.StackTrace);
+                    }
                 }
             }
 
@@ -284,9 +306,15 @@ namespace MiniSpotify.API.Impl
         {
             if (m_spotifyWebAPI != null)
             {
-                FullTrack currentTrack = Instance.GetLatestTrack();
-                float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
-                return progress;
+                try
+                {
+                    float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
+                    return progress;
+                }catch(NullReferenceException e) //Unexpected spotify closed
+                {
+                    Console.WriteLine(e.StackTrace);
+                    return -1;
+                }
             }
             else
                 return -1;

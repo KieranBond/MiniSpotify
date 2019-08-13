@@ -51,8 +51,17 @@ namespace MiniSpotify
             if (string.IsNullOrEmpty(artworkURL))
             {
                 Console.WriteLine("No track playing. Getting last track.");
-
-                artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
+                try
+                {
+                    if (APIRequestor.Instance.GetLatestTrack().Id != null)
+                    {
+                        artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
+                    }
+                }catch(NullReferenceException e)// ID returned a hard null and not normal null
+                {
+                    Console.WriteLine(e.StackTrace);
+                    artworkURL = null;
+                }
                 artworkURL = APIRequestor.Instance.GetSongArtwork(artworkURL);//Get the artwork url
             }
 
@@ -131,7 +140,8 @@ namespace MiniSpotify
         {
             m_editWindowOpen = !m_editWindowOpen;
 
-            if(m_editWindowOpen)
+
+            if (m_editWindowOpen)
             {
                 editWindow.Show();
                 double mainWidth = RootWindow.ActualWidth;
@@ -139,9 +149,25 @@ namespace MiniSpotify
                 double editWindowY = Application.Current.MainWindow.Top;
                 editWindow.Top = editWindowY;
                 editWindow.Left = editWindowX + m_editWindowGap;
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    //Update any UI in this block.
+                    RotateTransform rotateTransform = new RotateTransform(180);
+                    EditorButton.RenderTransform = rotateTransform;
+                });
+
+
             }
             else
             {
+                this.Dispatcher.Invoke(() =>
+                {
+                    //Update any UI in this block.
+                    RotateTransform rotateTransform = new RotateTransform(0);
+                    EditorButton.RenderTransform = rotateTransform;
+                });
+
                 editWindow.Hide();
             }
         }
