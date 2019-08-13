@@ -54,7 +54,7 @@ namespace MiniSpotify.API.Impl
         private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
         
         private string m_albumimage = "";
-        public static string t_id = "";
+        public static string m_id = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
