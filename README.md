@@ -11,4 +11,4 @@ but do plan to write my own equivalent instead at some point.
 
 Find the [Contribution Guidelines here](CONTRIBUTING.md)
 
-Find the [Pull Request section here](CONTRIBUTING.md)
+Find the [Pull Request section here](CONTRIBUTING.md#pull-request-process)
