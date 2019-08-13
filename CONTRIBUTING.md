@@ -26,6 +26,8 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 Development should occur in feature or bug branches, branched from the latest commit on the `development` branch and kept up to date with the `development` branch as often as possible. 
 
+Master branch is a protected branch, designed to only be merged into from `development` when a stable build is produced and tagged on the `development` branch. This build should then be added to the [Repositorys releases](https://github.com/KieranBond/MiniSpotify/releases).
+
 Branch names should be structured as so: `type/#issuenumber-name-of-branch`.
 
 Examples:
