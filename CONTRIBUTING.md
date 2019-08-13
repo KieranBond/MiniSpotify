@@ -28,7 +28,7 @@ Development should occur in feature or bug branches, branched from the latest co
 
 `Master` is a protected branch, designed to only be merged into from `development` when a stable build is produced and tagged on the `development` branch. This build should then be added to the [Repositorys releases](https://github.com/KieranBond/MiniSpotify/releases).
 
-Branch names should be structured as so: `type/#issuenumber-name-of-branch`.
+Branch names should be structured as so: `type/#relatedIssueNumber-feature-or-bug-name`.
 
 Examples:
  * feature/#100-volume-slider
