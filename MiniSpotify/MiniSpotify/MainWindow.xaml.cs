@@ -245,6 +245,21 @@ namespace MiniSpotify
         {
             m_pinnedToTop = !m_pinnedToTop;
             Application.Current.MainWindow.Topmost = m_pinnedToTop;
+
+            this.Dispatcher.Invoke(() =>
+            {
+                ImageBrush pinnedBrush = new ImageBrush();
+                if (m_pinnedToTop)
+                {
+                    pinnedBrush.ImageSource = new BitmapImage(new Uri("Assets/Images/Icons/pin-icon.png", UriKind.Relative));
+                }
+                else
+                {
+                    pinnedBrush.ImageSource = new BitmapImage(new Uri("Assets/Images/Icons/pin-icon-red.png", UriKind.Relative));
+                }
+
+                PinToTopButton.Background = pinnedBrush;
+            });
         }
 
         private void OnChangeWindowBackgroundColour(string a_colourHexCode)

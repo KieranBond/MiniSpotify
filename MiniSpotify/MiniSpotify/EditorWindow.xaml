@@ -9,6 +9,10 @@
         ResizeMode="NoResize" Topmost="True" BorderBrush="#232322" 
         Background="#232322" FontFamily="Lato" WindowStyle="None">
     <Grid>
-        
+        <Button Name="ColourWheelPicker">
+            <Button.Background>
+                <ImageBrush/>
+            </Button.Background>
+        </Button>
     </Grid>
 </Window>

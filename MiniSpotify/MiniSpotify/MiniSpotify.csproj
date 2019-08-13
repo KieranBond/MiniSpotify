@@ -178,9 +178,9 @@
   <ItemGroup>
     <Resource Include="NoteMW.ico" />
     <Resource Include="NoteM.ico" />
-    <Resource Include="Assets\Images\Icons\pin-icon.png">
+    <Content Include="Assets\Images\Icons\pin-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Resource Include="Assets\Images\Icons\back-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -202,9 +202,9 @@
     <Resource Include="Assets\Images\Icons\play-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Images\Icons\pin-icon-red.png">
+    <Content Include="Assets\Images\Icons\pin-icon-red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="Assets\Images\Icons\play-icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

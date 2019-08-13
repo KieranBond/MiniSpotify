@@ -43,9 +43,8 @@
                 HorizontalAlignment="Right"
                 Width="15">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon-red.png"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon.png"/>
                 </Button.Background>
-
             </Button>
         </DockPanel>
 
