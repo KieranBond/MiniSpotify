@@ -58,7 +58,7 @@ namespace MiniSpotify
                         artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
                         APIRequestor.t_id = artworkURL; //Setting the temp id to current one
                     }
-                }catch(NullReferenceException e)// Internet connection Failure of not getting
+                }catch(NullReferenceException e)// ID returned a hard null and not normal null
                 {
                     Console.WriteLine(e.StackTrace);
                     artworkURL = APIRequestor.t_id; //Getting backup of last used id
