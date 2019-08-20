@@ -268,9 +268,17 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                         m_albumimage = imageURL; //Set it as 'backup'
                     }catch(Exception e) // Returned a hard null and not normal null
                     {
-                        imageURL = t_albumimage;
+                        //Use backup image
+                        if (m_albumimage != null)
+                            imageURL = m_albumimage;
+
                         Console.WriteLine(e.StackTrace);
                     }
+                }
+                else if(m_albumimage != null)
+                {
+                    //Use backup image
+                    imageURL = m_albumimage;
                 }
             }
 
@@ -308,6 +316,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
             {
                 try
                 {
+                    FullTrack currentTrack = Instance.GetLatestTrack();
                     float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
                     return progress;
                 }catch(NullReferenceException e) //Unexpected spotify closed
