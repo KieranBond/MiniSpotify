@@ -52,7 +52,7 @@ namespace MiniSpotify.API.Impl
         private string m_clientID = "93f2598a9eaf4056b34f7b5ca254ff17";
         private string m_clientSecret = "";
         private string m_clientSecretPath = "\\Assets\\Files\\ClientSecret.txt";
-        
+
         private string m_albumimage = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
@@ -79,7 +79,7 @@ namespace MiniSpotify.API.Impl
             }
 
             string secret = FileHelper.GetFileText(m_clientSecretPath);
-            if(!string.IsNullOrEmpty(secret))
+            if (!string.IsNullOrEmpty(secret))
             {
                 m_instance.m_clientSecret = secret;
             }
@@ -140,7 +140,7 @@ namespace MiniSpotify.API.Impl
                 m_instance.m_webClient = null;
             }
 
-            if(m_pollingTask != null)
+            if (m_pollingTask != null)
             {
                 m_pollingTask.Dispose();
                 m_pollingTask = null;
@@ -149,7 +149,7 @@ namespace MiniSpotify.API.Impl
             m_spotifyWebAPI.Dispose();
             m_spotifyWebAPI = null;
 
-            
+
         }
 
         public void ModifyPlayback()
@@ -160,7 +160,7 @@ namespace MiniSpotify.API.Impl
                 //Already listening to music, we'll modify and pause it
                 ErrorResponse e = m_spotifyWebAPI.PausePlayback();
 
-                if(e.HasError())
+                if (e.HasError())
                 {
                     Console.WriteLine(e.Error.Message);
                 }
@@ -211,16 +211,18 @@ namespace MiniSpotify.API.Impl
             }
         }
 
-public bool SkipSongPlayback(bool a_nextSong = true)
+        public bool SkipSongPlayback(bool a_nextSong = true)
         {
             //See if they're already listening to music.
             if (m_spotifyWebAPI.GetPlayingTrack().IsPlaying)
             {
                 if (a_nextSong)
-                { try
+                {
+                    try
                     {
                         m_spotifyWebAPI.SkipPlaybackToNext();
-                    }catch(ArgumentException e) // Spammed the button before the system could register it as event
+                    }
+                    catch (ArgumentException e) // Spammed the button before the system could register it as event
                     {
                         Console.WriteLine(e.StackTrace);
                     }
@@ -247,7 +249,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
 
         public string GetSongArtwork(string a_trackID)
         {
-            if(m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null)
             {
                 return m_spotifyWebAPI.GetTrack(a_trackID).Album.Images[0].Url;
             }
@@ -258,15 +260,16 @@ public bool SkipSongPlayback(bool a_nextSong = true)
         {
             string imageURL = null;
 
-            if(m_spotifyWebAPI != null && m_spotifyWebAPI.GetPlayback().IsPlaying)
+            if (m_spotifyWebAPI != null && m_spotifyWebAPI.GetPlayback().IsPlaying)
             {
-                if(!m_spotifyWebAPI.GetPlayingTrack().HasError())
+                if (!m_spotifyWebAPI.GetPlayingTrack().HasError())
                 {
                     try
                     {
                         imageURL = m_spotifyWebAPI.GetPlayingTrack().Item.Album.Images[0].Url;
                         m_albumimage = imageURL; //Set it as 'backup'
-                    }catch(Exception e) // Returned a hard null and not normal null
+                    }
+                    catch (Exception e) // Returned a hard null and not normal null
                     {
                         //Use backup image
                         if (m_albumimage != null)
@@ -275,7 +278,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                         Console.WriteLine(e.StackTrace);
                     }
                 }
-                else if(m_albumimage != null)
+                else if (m_albumimage != null)
                 {
                     //Use backup image
                     imageURL = m_albumimage;
@@ -287,7 +290,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
 
         public FullTrack GetLatestTrack()
         {
-            if(m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null)
             {
                 if (m_spotifyWebAPI.GetPlayback().IsPlaying || m_spotifyWebAPI.GetPlayingTrack().Item != null)
                 {
@@ -297,7 +300,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                 {
                     FullTrack latestTrack = m_spotifyWebAPI.GetPlayingTrack().Item;
                     if (latestTrack != null)
-                    { 
+                    {
                         return latestTrack;
                     }
                     else if (m_spotifyWebAPI.GetUsersRecentlyPlayedTracks().Error == null)
@@ -319,7 +322,8 @@ public bool SkipSongPlayback(bool a_nextSong = true)
                     FullTrack currentTrack = Instance.GetLatestTrack();
                     float progress = (float)m_spotifyWebAPI.GetPlayback().ProgressMs / (float)currentTrack.DurationMs;
                     return progress;
-                }catch(NullReferenceException e) //Unexpected spotify closed
+                }
+                catch (NullReferenceException e) //Unexpected spotify closed
                 {
                     Console.WriteLine(e.StackTrace);
                     return -1;
@@ -331,7 +335,7 @@ public bool SkipSongPlayback(bool a_nextSong = true)
 
         public bool GetIsPlaying()
         {
-            if(m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null)
             {
                 return m_spotifyWebAPI.GetPlayback().IsPlaying;
             }
@@ -340,18 +344,18 @@ public bool SkipSongPlayback(bool a_nextSong = true)
         }
 
         private async void PollSongChange()
-        { 
+        {
             while (m_spotifyWebAPI != null)
             {
                 FullTrack currentTrack = m_instance.GetLatestTrack();
-                
-                if(currentTrack != null)
+
+                if (currentTrack != null)
                 {
-                    if(m_instance.m_latestTrack == null)
+                    if (m_instance.m_latestTrack == null)
                     {
                         m_instance.m_onSongChanged(currentTrack);
                     }
-                    else if(currentTrack != m_instance.m_latestTrack)
+                    else if (currentTrack != m_instance.m_latestTrack)
                     {
                         m_instance.m_onSongChanged(currentTrack);
                         m_instance.m_latestTrack = currentTrack;
