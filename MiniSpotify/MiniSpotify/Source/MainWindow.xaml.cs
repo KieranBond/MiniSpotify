@@ -41,6 +41,9 @@ namespace MiniSpotify
 
         public void UpdateUI(FullTrack a_latestTrack = null)
         {
+            bool liked = APIRequestor.Instance.GetSongIsLiked();
+            UpdateLikeIcon(liked);
+
             bool playing = APIRequestor.Instance.GetIsPlaying();
             UpdatePlayIcon(playing);
 
@@ -124,7 +127,8 @@ namespace MiniSpotify
 
         public void OnClickLike(object a_sender, RoutedEventArgs a_args)
         {
-            throw new NotImplementedException();
+            APIRequestor.Instance.ModifyLike();
+            UpdateLikeIcon(APIRequestor.Instance.GetSongIsLiked());
         }
 
         public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)
@@ -218,6 +222,30 @@ namespace MiniSpotify
             this.Dispatcher.Invoke(() =>
             {
                 SongProgress.Value = a_progress;
+            });
+        }
+
+        private void UpdateLikeIcon(bool a_isLiked)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                //Always update UI like this.
+                if (a_isLiked)
+                {
+                    LikeSongButton.IsEnabled = false;
+                    LikeSongButton.Visibility = Visibility.Hidden;
+
+                    UnlikeSongButton.IsEnabled = true;
+                    UnlikeSongButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    LikeSongButton.IsEnabled = true;
+                    LikeSongButton.Visibility = Visibility.Visible;
+
+                    UnlikeSongButton.IsEnabled = false;
+                    UnlikeSongButton.Visibility = Visibility.Hidden;
+                }
             });
         }
 
