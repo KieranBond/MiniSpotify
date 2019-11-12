@@ -56,23 +56,30 @@
             </Image>
             <TextBlock Name="TitleText" Margin="92,0,15,61" FontFamily="Lato" FontSize="18" Foreground="White"></TextBlock>
             <ProgressBar Name="SongProgress" Value="0" Width="400" Height="10" Margin="0,84,0,0" Background="#5b5b5b" Foreground="#e2d647" BorderThickness="0"/>
+            <Button Name="LikeSongButton" 
+        BorderBrush="Black" BorderThickness="0" 
+        Click="OnClickLike" ClickMode="Press" HorizontalAlignment="Right" Width="16" Height="15" VerticalAlignment="Top" Margin="0,60,281,0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Assets/Images/Icons/unliked-icon.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
             <Button Name="PlaybackButton" 
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,149,0">
+        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,131,0">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
             <Button Name="NextSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,60,60,0">
+        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,60,50,0">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/forward-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
             <Button Name="PreviousSongButton"
         BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,59,239,0">
+        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,59,212,0">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

@@ -121,6 +121,12 @@ namespace MiniSpotify
                 ArtistText.Text = artists;
             });
         }
+
+        public void OnClickLike(object a_sender, RoutedEventArgs a_args)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)
         {
             APIRequestor.Instance.ModifyPlayback();//Returns true if now playing, else false
