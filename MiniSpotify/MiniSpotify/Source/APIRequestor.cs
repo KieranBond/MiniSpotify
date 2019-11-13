@@ -160,9 +160,9 @@ namespace MiniSpotify.API.Impl
 
             List<bool> list = m_spotifyWebAPI.CheckSavedTracks(currentID).List;
 
-            for (int i = 0; i < list.Count; ++i)
+            if (list.Count == 1)
             {
-                if (m_spotifyWebAPI.CheckSavedTracks(currentID).List[i]) // If liked, dislike.
+                if (list[0]) // If liked, dislike.
                 {
                     m_spotifyWebAPI.RemoveSavedTracks(currentID);
                 }
