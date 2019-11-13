@@ -154,21 +154,22 @@ namespace MiniSpotify.API.Impl
 
         public void ModifyLike()
         {
-            FullTrack currentTrack = m_instance.GetLatestTrack();
-
-            List<string> currentID = new List<string> { currentTrack.Id };
-
-            List<bool> list = m_spotifyWebAPI.CheckSavedTracks(currentID).List;
-
-            if (list.Count == 1)
+            if (m_latestTrack != null)
             {
-                if (list[0]) // If liked, dislike.
+                List<string> currentID = new List<string> { m_latestTrack.Id };
+
+                List<bool> list = m_spotifyWebAPI.CheckSavedTracks(currentID).List;
+
+                if (list.Count == 1)
                 {
-                    m_spotifyWebAPI.RemoveSavedTracks(currentID);
-                }
-                else // If disliked, like.
-                {
-                    m_spotifyWebAPI.SaveTracks(currentID);
+                    if (list[0]) // If liked, dislike.
+                    {
+                        m_spotifyWebAPI.RemoveSavedTracks(currentID);
+                    }
+                    else // If disliked, like.
+                    {
+                        m_spotifyWebAPI.SaveTracks(currentID);
+                    }
                 }
             }
         }
@@ -356,11 +357,9 @@ namespace MiniSpotify.API.Impl
 
         public bool GetSongIsLiked()
         {
-            if (m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null && m_latestTrack != null)
             {
-                FullTrack currentTrack = m_instance.GetLatestTrack();
-
-                List<string> toCheck = new List<string> { currentTrack.Id };
+                List<string> toCheck = new List<string> { m_latestTrack.Id };
 
                 return m_spotifyWebAPI.CheckSavedTracks(toCheck).List[0];
             }
