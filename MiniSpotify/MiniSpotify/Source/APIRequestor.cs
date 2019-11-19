@@ -152,11 +152,13 @@ namespace MiniSpotify.API.Impl
 
         }
 
-        public void ModifyLike()
+        public bool ModifyLike() //Return true if the song becomes liked. False otherwise.
         {
-            if (m_latestTrack != null)
+            FullTrack currentTrack = m_instance.GetLatestTrack();
+
+            if (currentTrack != null)
             {
-                List<string> currentID = new List<string> { m_latestTrack.Id };
+                List<string> currentID = new List<string> { currentTrack.Id };
 
                 List<bool> list = m_spotifyWebAPI.CheckSavedTracks(currentID).List;
 
@@ -165,13 +167,19 @@ namespace MiniSpotify.API.Impl
                     if (list[0]) // If liked, dislike.
                     {
                         m_spotifyWebAPI.RemoveSavedTracks(currentID);
+                        return false;
                     }
                     else // If disliked, like.
                     {
                         m_spotifyWebAPI.SaveTracks(currentID);
+                        return true;
                     }
                 }
+                else
+                    return false;
             }
+            else
+                return false;
         }
 
         public void ModifyPlayback()
@@ -357,11 +365,21 @@ namespace MiniSpotify.API.Impl
 
         public bool GetSongIsLiked()
         {
-            if (m_spotifyWebAPI != null && m_latestTrack != null)
+            if (m_spotifyWebAPI != null)
             {
-                List<string> toCheck = new List<string> { m_latestTrack.Id };
+                try
+                {
+                    FullTrack currentTrack = Instance.GetLatestTrack();
 
-                return m_spotifyWebAPI.CheckSavedTracks(toCheck).List[0];
+                    List<string> toCheck = new List<string> { currentTrack.Id };
+
+                    return m_spotifyWebAPI.CheckSavedTracks(toCheck).List[0];
+                }
+                catch (NullReferenceException e) //Unexpected spotify closed
+                {
+                    Console.WriteLine(e.StackTrace);
+                    return false;
+                }
             }
 
             return false;

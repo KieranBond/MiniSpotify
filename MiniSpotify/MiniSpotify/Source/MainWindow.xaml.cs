@@ -127,8 +127,7 @@ namespace MiniSpotify
 
         public void OnClickLike(object a_sender, RoutedEventArgs a_args)
         {
-            APIRequestor.Instance.ModifyLike();
-            UpdateLikeIcon(APIRequestor.Instance.GetSongIsLiked());
+            UpdateLikeIcon(APIRequestor.Instance.ModifyLike());
         }
 
         public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)
