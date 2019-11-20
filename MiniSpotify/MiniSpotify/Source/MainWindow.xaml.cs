@@ -163,7 +163,7 @@ namespace MiniSpotify
                 {
                     //Update any UI in this block.
                     RotateTransform rotateTransform = new RotateTransform(180);
-                    EditorButton.RenderTransform = rotateTransform;
+                    //EditorButton.RenderTransform = rotateTransform;
                 });
 
 
@@ -174,7 +174,7 @@ namespace MiniSpotify
                 {
                     //Update any UI in this block.
                     RotateTransform rotateTransform = new RotateTransform(0);
-                    EditorButton.RenderTransform = rotateTransform;
+                    //EditorButton.RenderTransform = rotateTransform;
                 });
 
                 editWindow.Hide();
