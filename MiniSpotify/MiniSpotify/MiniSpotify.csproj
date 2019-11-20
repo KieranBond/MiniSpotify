@@ -163,8 +163,20 @@
     <Resource Include="Assets\Images\NextSongButton.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Images\Icons\unliked-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Assets\Images\Icons\unliked-icon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="NoteMW.ico" />
     <Resource Include="NoteM.ico" />
+    <Resource Include="Assets\Images\Icons\liked-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Assets\Images\Icons\liked-icon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Images\Icons\pin-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

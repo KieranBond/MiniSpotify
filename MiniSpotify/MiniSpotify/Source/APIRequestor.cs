@@ -57,7 +57,7 @@ namespace MiniSpotify.API.Impl
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
         //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
-        private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed | Scope.UserReadCurrentlyPlaying | Scope.UserReadPlaybackState;
+        private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed | Scope.UserReadCurrentlyPlaying | Scope.UserReadPlaybackState | Scope.UserLibraryModify | Scope.UserLibraryRead;
         private HttpClient m_webClient;
         private static SpotifyWebAPI m_spotifyWebAPI;
         private Token m_authToken;
@@ -150,6 +150,36 @@ namespace MiniSpotify.API.Impl
             m_spotifyWebAPI = null;
 
 
+        }
+
+        public bool ModifyLike() //Return true if the song becomes liked. False otherwise.
+        {
+            FullTrack currentTrack = m_instance.GetLatestTrack();
+
+            if (currentTrack != null)
+            {
+                List<string> currentID = new List<string> { currentTrack.Id };
+
+                List<bool> list = m_spotifyWebAPI.CheckSavedTracks(currentID).List;
+
+                if (list.Count == 1)
+                {
+                    if (list[0]) // If liked, dislike.
+                    {
+                        m_spotifyWebAPI.RemoveSavedTracks(currentID);
+                        return false;
+                    }
+                    else // If disliked, like.
+                    {
+                        m_spotifyWebAPI.SaveTracks(currentID);
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
         }
 
         public void ModifyPlayback()
@@ -331,6 +361,28 @@ namespace MiniSpotify.API.Impl
             }
             else
                 return -1;
+        }
+
+        public bool GetSongIsLiked()
+        {
+            if (m_spotifyWebAPI != null)
+            {
+                try
+                {
+                    FullTrack currentTrack = Instance.GetLatestTrack();
+
+                    List<string> toCheck = new List<string> { currentTrack.Id };
+
+                    return m_spotifyWebAPI.CheckSavedTracks(toCheck).List[0];
+                }
+                catch (NullReferenceException e) //Unexpected spotify closed
+                {
+                    Console.WriteLine(e.StackTrace);
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         public bool GetIsPlaying()
