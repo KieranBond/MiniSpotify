@@ -1,11 +1,3 @@
-# About this branch
-
-This branch is to add a button on the main interface so the user can save and unsave the currently playing songs into the Liked Songs library.
-
-It adds the following scopes for the feature to work:
-- user-library-read
-- user-library-modify
-
 # MiniSpotify
 A mini-player/viewer for Spotify, that gives you the information you want but in a smaller windowed package.
 
