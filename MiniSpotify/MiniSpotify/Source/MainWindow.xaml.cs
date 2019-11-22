@@ -201,6 +201,8 @@ namespace MiniSpotify
                     memory.Position = 0;
                     bmpImage.BeginInit();
                     bmpImage.StreamSource = memory;
+                    bmpImage.DecodePixelWidth = 128;
+                    bmpImage.DecodePixelHeight = 128;
                     bmpImage.CacheOption = BitmapCacheOption.OnLoad;
                     bmpImage.EndInit();
                 }
