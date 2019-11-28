@@ -7,6 +7,10 @@ a package I've wanted to create for a little while.
 Made with C#, using WPF. Also currently is implementing [Johnny Crazy's Spotify API](https://github.com/JohnnyCrazy/SpotifyAPI-NET),
 but do plan to write my own equivalent instead at some point.
 
+# Releases
+
+[Find all official releases here](https://github.com/KieranBond/MiniSpotify/releases)
+
 ## Contribution Guidelines
 
 Find the [Contribution Guidelines here](CONTRIBUTING.md)
