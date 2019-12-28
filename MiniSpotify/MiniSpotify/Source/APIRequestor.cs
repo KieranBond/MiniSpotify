@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -393,6 +394,48 @@ namespace MiniSpotify.API.Impl
             }
 
             return false;
+        }
+
+        public string GetPlaybackContext()
+        {
+            string InvalidReturn = string.Empty;
+
+            if (m_spotifyWebAPI != null)
+            {
+                Context context = m_spotifyWebAPI.GetPlayback().Context;
+
+                if (context == null)
+                {
+                    return InvalidReturn;
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(context.Type))
+                    {
+                        return InvalidReturn;
+                    }
+                    else
+                    {
+                        string id = context.Uri.Split(':').Last();
+
+                        switch (context.Type)
+                        {
+                            case "album":
+                                return m_spotifyWebAPI.GetAlbum(id).Name;
+                            case "artist":
+                                return m_spotifyWebAPI.GetArtist(id).Name;
+                            case "playlist":
+                                return m_spotifyWebAPI.GetPlaylist(id).Name;
+                            default:
+                                return InvalidReturn;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return InvalidReturn;
+            }
         }
 
         private async void PollSongChange()
