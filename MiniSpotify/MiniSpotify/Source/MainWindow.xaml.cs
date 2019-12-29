@@ -82,6 +82,7 @@ namespace MiniSpotify
             {
                 string trackName = a_latestTrack.Name;
                 string artists = a_latestTrack.Artists[0].Name;
+                string context = APIRequestor.Instance.GetPlaybackContext();
 
                 for (int i = 1; i < a_latestTrack.Artists.Count; i++)
                 {
@@ -93,6 +94,7 @@ namespace MiniSpotify
                     //Update any UI in this block.
                     TitleText.Text = a_latestTrack.Name;
                     ArtistText.Text = artists;
+                    ContextText.Text = context;
                 });
             }
         }

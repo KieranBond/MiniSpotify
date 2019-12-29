@@ -106,7 +106,8 @@
                     <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <TextBlock Name="ArtistText" Margin="92,20,15,42" FontFamily="Lato Light" Foreground="White" FontSize="14"></TextBlock>
+            <TextBlock Name="ArtistText" Margin="92,20,15,56" FontFamily="Lato Light" Foreground="White" FontSize="14"></TextBlock>
+            <TextBlock Name="ContextText" Margin="92,36,15,40" FontFamily="Lato Light" Foreground="White" FontSize="12"></TextBlock>
             <!-- <Button x:Name="EditorButton" 
                 BorderBrush="Black" BorderThickness="0" 
                 Click="OnClickEditorButton" ClickMode="Press" HorizontalAlignment="Right" Width="5" Height="15" VerticalAlignment="Top" Margin="0,29,5,0" RenderTransformOrigin="0.5,0.5">
