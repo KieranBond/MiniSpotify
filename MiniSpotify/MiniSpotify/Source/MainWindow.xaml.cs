@@ -113,8 +113,9 @@ namespace MiniSpotify
 
             string trackName = a_latestTrackPlaying.Name;
             string artists = a_latestTrackPlaying.Artists[0].Name;
+            string context = APIRequestor.Instance.GetPlaybackContext();
 
-            for(int i = 1; i < a_latestTrackPlaying.Artists.Count; i++)
+            for (int i = 1; i < a_latestTrackPlaying.Artists.Count; i++)
             {
                 artists = string.Concat(artists, ", ", a_latestTrackPlaying.Artists[i].Name);
             }
@@ -124,6 +125,7 @@ namespace MiniSpotify
                 //Update any UI in this block.
                 TitleText.Text = a_latestTrackPlaying.Name;
                 ArtistText.Text = artists;
+                ContextText.Text = context;
             });
         }
 
