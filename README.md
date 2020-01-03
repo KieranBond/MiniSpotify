@@ -19,6 +19,6 @@ Find the [Pull Request section here](CONTRIBUTING.md#pull-request-process)
 
 ## Like the project/app? 
 
-Feel free to [buy me a coffee!](https://www.buymeacoffee.com/KieranB)
+Feel free to [buy me a coffee!](https://www.buymeacoffee.com/KieranB) or contribute to the [Funding Pool on Paypal](https://paypal.me/pools/c/8lndfh7YyZ)
 
-It'll help me find more time to work on this and things like this.
+It'll help me/us find more time to work on this and things like this.
