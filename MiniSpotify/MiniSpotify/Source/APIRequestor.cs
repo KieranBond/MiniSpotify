@@ -44,9 +44,6 @@ namespace MiniSpotify.API.Impl
 
         private int m_songChangePollDelayMS = /*10000*/1000;//1 second
 
-        private string m_baseFilePath = "\\Assets\\Files\\URLPath.txt";
-        private string m_authFilePath = "\\Assets\\Files\\AuthorisePath.txt";
-        //private string m_tokenFilePath = "\\Assets\\Files\\AuthToken.txt";
         private string m_baseURL = default;
         private string m_authURL = default;
 
@@ -57,7 +54,6 @@ namespace MiniSpotify.API.Impl
         private string m_albumimage = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
-        //private string m_accessScopes = "user-modify-playback-state";//These are seperated by %20's
         private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed | Scope.UserReadCurrentlyPlaying | Scope.UserReadPlaybackState | Scope.UserLibraryModify | Scope.UserLibraryRead;
         private HttpClient m_webClient;
         private static SpotifyWebAPI m_spotifyWebAPI;
@@ -67,23 +63,11 @@ namespace MiniSpotify.API.Impl
         {
             m_instance = new APIRequestor();
 
-            string webBase = FileHelper.GetFileText(m_baseFilePath);
-            if (webBase != null && !string.IsNullOrEmpty(webBase))
-            {
-                m_instance.m_baseURL = webBase;
-            }
-
-            string authBase = FileHelper.GetFileText(m_authFilePath);
-            if (authBase != null && !string.IsNullOrEmpty(authBase))
-            {
-                m_instance.m_authURL = authBase;
-            }
-
-            string secret = FileHelper.GetFileText(m_clientSecretPath);
-            if (!string.IsNullOrEmpty(secret))
-            {
-                m_instance.m_clientSecret = secret;
-            }
+            //string secret = FileHelper.GetFileText(m_clientSecretPath);
+            //if (!string.IsNullOrEmpty(secret))
+            //{
+            //    m_instance.m_clientSecret = secret;
+            //}
 
             AuthAPI();
         }
@@ -92,39 +76,63 @@ namespace MiniSpotify.API.Impl
         {
             //Source:
             //https://github.com/JohnnyCrazy/SpotifyAPI-NET
+            //https://johnnycrazy.github.io/SpotifyAPI-NET/auth/implicit_grant.html
 
             //If token isn't set, or has expired
             if (m_instance.m_authToken == null || m_instance.m_authToken.IsExpired())
             {
                 string redirectURI = "http://localhost:4002";
 
+                #region Old Auth method
 
+                //AuthorizationCodeAuth auth = new AuthorizationCodeAuth(
+                //            m_instance.m_clientID,
+                //            m_instance.m_clientSecret,
+                //            redirectURI,
+                //            redirectURI,
+                //            m_accessScopes);
 
-                AuthorizationCodeAuth auth = new AuthorizationCodeAuth(
-                            m_instance.m_clientID,
-                            m_instance.m_clientSecret,
-                            redirectURI,
-                            redirectURI,
-                            m_accessScopes);
+                //auth.AuthReceived += async (sender, payload) =>
+                //{
+                //    auth.Stop(); //Sender is also the auth instance
+
+                //    m_instance.m_authToken = await auth.ExchangeCode(payload.Code);
+
+                //    m_spotifyWebAPI = new SpotifyWebAPI()
+                //    {
+                //        //TokenType = payload.TokenType,
+                //        TokenType = m_instance.m_authToken.TokenType,
+                //        //AccessToken = payload.AccessToken
+                //        AccessToken = m_instance.m_authToken.AccessToken,
+                //        UseAuth = true
+                //    };
+
+                //    m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
+
+                //    m_instance.m_onAuthComplete.Invoke(GetLatestTrack());
+                //};
+                #endregion
+
+                ImplicitGrantAuth auth = new ImplicitGrantAuth(
+                        m_instance.m_clientID,
+                        redirectURI,
+                        redirectURI,
+                        m_accessScopes);
 
                 auth.AuthReceived += async (sender, payload) =>
                 {
-                    auth.Stop(); //Sender is also the auth instance
-
-                    m_instance.m_authToken = await auth.ExchangeCode(payload.Code);
+                    auth.Stop(); // `sender` is also the auth instance
+                    
+                    m_instance.m_authToken = payload;
 
                     m_spotifyWebAPI = new SpotifyWebAPI()
                     {
-                        //TokenType = payload.TokenType,
                         TokenType = m_instance.m_authToken.TokenType,
-                        //AccessToken = payload.AccessToken
                         AccessToken = m_instance.m_authToken.AccessToken,
                         UseAuth = true
                     };
-
+                    
                     m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
-
-                    m_instance.m_onAuthComplete.Invoke(GetLatestTrack());
                 };
 
                 auth.Start();//Starts an internal http server
@@ -147,9 +155,11 @@ namespace MiniSpotify.API.Impl
                 m_pollingTask = null;
             }
 
-            m_spotifyWebAPI.Dispose();
-            m_spotifyWebAPI = null;
-
+            if(m_spotifyWebAPI != null)
+            {
+                m_spotifyWebAPI.Dispose();
+                m_spotifyWebAPI = null;
+            }
 
         }
 
@@ -465,74 +475,5 @@ namespace MiniSpotify.API.Impl
                 await Task.Delay(m_songChangePollDelayMS);
             }
         }
-
-        #region Our own API implement - Not using until fully functional.
-
-        public async Task<string> Request(string a_reqPath, REST a_type = REST.GET)
-        {
-            string rest = FileHelper.GetRestString(a_type);
-            // dispose it when done, so the app doesn't leak resources
-            using (m_instance.m_webClient)
-            {
-                string uri = rest + "" + m_baseURL + "/" + a_reqPath;
-                // Call asynchronous network methods in a try/catch block to handle exceptions
-                try
-                {
-                    return await m_instance.m_webClient.GetStringAsync(uri);
-                }
-                catch (HttpRequestException e)
-                {
-                    Console.WriteLine("\nFailed to load request");
-                    Console.WriteLine("Message :{0} ", e.Message);
-                    return null;
-                }
-            }
-        }
-
-
-        //My one.. Might work now if we use local host, but using the github lib instead for now
-        private async void Authenticate()
-        {
-            //https://developers.google.com/identity/protocols/OAuth2InstalledApp
-            //https://github.com/googlesamples/oauth-apps-for-windows/blob/master/OAuthDesktopApp/OAuthDesktopApp/
-
-            // Creates a redirect URI using an available port on the loopback address.
-            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");            //string redirectURI = string.Format("http://{0}/{1}/", "kieranbond.github.io", "minispotify");
-            string redirectURI = "http://www.kieranbond.co.uk/minispotify/";
-            //string redirectURI = string.Format("http://{0}:{1}", IPAddress.Loopback, GetRandomUnusedPort());
-            string rest = FileHelper.GetRestString(REST.GET);
-
-            // Creates an HttpListener to listen for requests on that redirect URI.
-            HttpListener redirectListener = new HttpListener();
-            redirectListener.Prefixes.Add(redirectURI);
-            redirectListener.Start();
-            //We need to be running in Admin mode for this request
-            //to work - Otherwise we get an exception.
-            //https://stackoverflow.com/questions/4019466/httplistener-access-denied
-
-            string requestURI = string.Format("{0}?client_id={1}&response_type=code&" +
-                "redirect_uri={2}&scope={3}", m_authURL, m_clientID, redirectURI, m_accessScopes);
-            string restedRequestURI = rest + " " + requestURI;
-
-            // Opens request in the browser.
-            Process.Start(requestURI);
-
-            // Waits for the OAuth authorization response.
-            var context = await redirectListener.GetContextAsync();
-            string code = context.Request.QueryString.Get("code");
-            Console.WriteLine("Code: " + code);
-            redirectListener.Stop();
-            //var response = context.Response;
-            //var responseStream = response.OutputStream;
-            //Task responseTask = responseStream.WriteAsync(buffer, 0, buffer.Length).ContinueWith((task) =>
-            //{
-            //    responseStream.Close();
-            //    redirectListener.Stop();
-            //    Console.WriteLine("HTTP server stopped.");
-            //});
-
-        }
-
-        #endregion
     }
 }

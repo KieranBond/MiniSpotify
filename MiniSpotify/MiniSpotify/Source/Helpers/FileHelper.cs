@@ -10,29 +10,6 @@ namespace MiniSpotify.HelperScripts
 {
     public static class FileHelper
     {
-        public static string GetRestString(REST a_type)
-        {
-            switch (a_type)
-            {
-                case REST.GET:
-
-                    return "GET";
-                case REST.POST:
-
-                    return "POST";
-
-                case REST.PUT:
-
-                    return "PUT";
-
-                case REST.DELETE:
-
-                    return "DELETE";
-            }
-
-            return null;//Else
-        }
-
         public static string GetFileText(string a_filePath)
         {
             //string path = Path.Combine(Environment.CurrentDirectory, a_filePath);
