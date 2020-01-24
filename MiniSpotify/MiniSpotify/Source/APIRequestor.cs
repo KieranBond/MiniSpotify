@@ -280,7 +280,7 @@ namespace MiniSpotify.API.Impl
 
         public string GetSongArtwork(string a_trackID)
         {
-            if (m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null && !string.IsNullOrEmpty(a_trackID))
             {
                 return m_spotifyWebAPI.GetTrack(a_trackID).Album.Images[0].Url;
             }

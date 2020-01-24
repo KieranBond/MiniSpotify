@@ -37,6 +37,8 @@ namespace MiniSpotify
             APIRequestor.Instance.m_onAPIPolled += UpdateUI;
 
             LocationChanged += UpdateEditWindowPosition;
+
+            Closing += (e, f) => APIRequestor.Instance.Close();
         }
 
         public void UpdateUI(FullTrack a_latestTrack = null)
