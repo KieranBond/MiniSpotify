@@ -78,40 +78,9 @@ namespace MiniSpotify.API.Impl
             //https://github.com/JohnnyCrazy/SpotifyAPI-NET
             //https://johnnycrazy.github.io/SpotifyAPI-NET/auth/implicit_grant.html
 
-            //If token isn't set, or has expired
             if (m_instance.m_authToken == null || m_instance.m_authToken.IsExpired())
             {
                 string redirectURI = "http://localhost:4002";
-
-                #region Old Auth method
-
-                //AuthorizationCodeAuth auth = new AuthorizationCodeAuth(
-                //            m_instance.m_clientID,
-                //            m_instance.m_clientSecret,
-                //            redirectURI,
-                //            redirectURI,
-                //            m_accessScopes);
-
-                //auth.AuthReceived += async (sender, payload) =>
-                //{
-                //    auth.Stop(); //Sender is also the auth instance
-
-                //    m_instance.m_authToken = await auth.ExchangeCode(payload.Code);
-
-                //    m_spotifyWebAPI = new SpotifyWebAPI()
-                //    {
-                //        //TokenType = payload.TokenType,
-                //        TokenType = m_instance.m_authToken.TokenType,
-                //        //AccessToken = payload.AccessToken
-                //        AccessToken = m_instance.m_authToken.AccessToken,
-                //        UseAuth = true
-                //    };
-
-                //    m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
-
-                //    m_instance.m_onAuthComplete.Invoke(GetLatestTrack());
-                //};
-                #endregion
 
                 ImplicitGrantAuth auth = new ImplicitGrantAuth(
                         m_instance.m_clientID,
@@ -136,7 +105,7 @@ namespace MiniSpotify.API.Impl
                 };
 
                 auth.Start();//Starts an internal http server
-                auth.OpenBrowser();//Opens brower to authenticate app
+                auth.OpenBrowser();//Opens browser to authenticate app
             }
         }
 
