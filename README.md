@@ -29,3 +29,4 @@ It'll help me/us find more time to work on this and things like this.
  * All the vectors used for the ui were stored into /MiniSpotifyPlayerUI.fig  (figma file).
  * Recolored the UI to match spotifys desktop application colors.
  * Replaced all UI icons for higher quality ones.
+ * Replaced window icons
