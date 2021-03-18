@@ -22,3 +22,10 @@ Find the [Pull Request section here](CONTRIBUTING.md#pull-request-process)
 Feel free to [buy me a coffee!](https://www.buymeacoffee.com/KieranB) or contribute to the [Funding Pool on Paypal](https://paypal.me/pools/c/8lndfh7YyZ)
 
 It'll help me/us find more time to work on this and things like this.
+
+
+## Changes
+
+ * All the files used for the ui were stored into /MiniSpotifyPlayerUI.fig  (figma file).
+ * Recolored the UI to match spotifys desktop application colors.
+ * Replaced all UI icons for higher quality ones.
