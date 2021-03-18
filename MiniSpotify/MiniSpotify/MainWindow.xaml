@@ -1,120 +1,226 @@
-﻿<Window x:Class="MiniSpotify.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MiniSpotify"
-        mc:Ignorable="d"
-        Title="Mini-Viewer" Height="110" Width="400" 
-        ResizeMode="NoResize" Topmost="True" BorderBrush="#232322" 
-        Background="#232322" FontFamily="Lato" WindowStyle="None"
-        MouseDown="TitleBar_MouseDown">
+﻿<Window
+    x:Class="MiniSpotify.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MiniSpotify"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Mini-Viewer"
+    Width="400"
+    Height="110"
+    AllowsTransparency="True"
+    Background="#FF181818"
+    FontFamily="Lato"
+    Foreground="{x:Null}"
+    Icon="NoteMW.ico"
+    MouseDown="TitleBar_MouseDown"
+    ResizeMode="NoResize"
+    Topmost="True"
+    WindowStyle="None"
+    mc:Ignorable="d">
 
     <DockPanel Name="RootWindow">
-        <DockPanel Name="TitleBar" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown"
-                   Background="Transparent">
-            <Button Name="CloseButton"
-                Click="OnClickClose"
-                DockPanel.Dock="Right"
-                Content="&#xE106;"
-                Background="#232322" 
-                FontFamily="Segoe MDL2 Assets" 
-                Foreground="PaleVioletRed" 
-                BorderThickness="0"
-                Margin="0,2,2,0" RenderTransformOrigin="0,0.714" HorizontalAlignment="Right">
-            </Button>
-            <Button Name="MinimiseButton"
-                Click="OnClickMinimise"
-                DockPanel.Dock="Right"
-                Content="&#xE949;"
-                Background="#232322"
-                Foreground="White"
-                FontFamily="Segoe MDL2 Assets"
-                BorderThickness="0"
+        <DockPanel
+            Name="TitleBar"
+            Background="Transparent"
+            DockPanel.Dock="Top"
+            MouseDown="TitleBar_MouseDown">
+            <Button
+                Name="CloseButton"
                 Margin="0,2,2,0"
-                HorizontalAlignment="Right">
-            </Button>
-            <Button Name="PinToTopButton"
+                HorizontalAlignment="Right"
+                Background="{x:Null}"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickClose"
+                Content="&#xE106;"
+                DockPanel.Dock="Right"
+                FontFamily="Segoe MDL2 Assets"
+                Foreground="#FFCD1A2B"
+                RenderTransformOrigin="0,0.714" />
+            <Button
+                Name="MinimiseButton"
+                Margin="0,2,2,0"
+                HorizontalAlignment="Right"
+                Background="{x:Null}"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickMinimise"
+                Content="&#xE949;"
+                DockPanel.Dock="Right"
+                FontFamily="Segoe MDL2 Assets"
+                Foreground="White" />
+            <Button
+                Name="PinToTopButton"
+                Width="15"
+                Margin="0,2,2,0"
+                HorizontalAlignment="Right"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
                 Click="OnClickPinButton"
                 DockPanel.Dock="Right"
                 FontFamily="Segoe MDL2 Assets"
-                BorderThickness="0"
-                Margin="0,2,2,0"
-                HorizontalAlignment="Right"
-                Width="15">
+                Foreground="#FF282828">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon.png"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/pin-icon.png" />
                 </Button.Background>
             </Button>
         </DockPanel>
 
-        <Grid Background="#232322" Width="400">
-            <Image Name="AlbumArtworkImage" Width="75" Height ="75" HorizontalAlignment="Left" Margin="12,0,0,0" Stretch="Fill" OpacityMask="{x:Null}" VerticalAlignment="Top">
+        <Grid Width="400">
+            <Image
+                Name="AlbumArtworkImage"
+                Width="75"
+                Height="75"
+                Margin="12,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Stretch="Fill">
                 <Image.Source>
-                    <BitmapImage UriSource=""/>
+                    <BitmapImage UriSource="" />
                 </Image.Source>
             </Image>
-            <TextBlock Name="TitleText" Margin="92,0,15,61" FontFamily="Lato" FontSize="18" Foreground="White"></TextBlock>
-            <ProgressBar Name="SongProgress" Value="0" Width="400" Height="10" Margin="0,84,0,0" Background="#5b5b5b" Foreground="#e2d647" BorderThickness="0"/>
-            <Button Name="LikeSongButton" 
-        BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickLike" ClickMode="Press" HorizontalAlignment="Right" Width="16" Height="15" VerticalAlignment="Top" Margin="0,60,281,0">
+            <TextBlock
+                Name="TitleText"
+                Margin="92,0,15,61"
+                FontFamily="Lato"
+                FontSize="18"
+                Foreground="White" />
+            <ProgressBar
+                Name="SongProgress"
+                Width="400"
+                Height="10"
+                Margin="0,84,0,0"
+                Background="#FF282828"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Foreground="#FF1DB954"
+                Value="0" />
+            <Button
+                Name="LikeSongButton"
+                Width="16"
+                Height="15"
+                Margin="0,60,281,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickLike"
+                ClickMode="Press"
+                Foreground="#FF282828">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/unliked-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/unliked-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <Button Name="UnlikeSongButton" IsEnabled="False" Visibility="Hidden" 
-        BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickLike" ClickMode="Press" HorizontalAlignment="Right" Width="16" Height="15" VerticalAlignment="Top" Margin="0,60,281,0">
+            <Button
+                Name="UnlikeSongButton"
+                Width="16"
+                Height="15"
+                Margin="0,60,281,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="Black"
+                BorderThickness="0"
+                Click="OnClickLike"
+                ClickMode="Press"
+                IsEnabled="False"
+                Visibility="Hidden">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/liked-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/liked-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <Button Name="PlaybackButton" 
-        BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,131,0">
+            <Button
+                Name="PlaybackButton"
+                Width="9"
+                Height="15"
+                Margin="0,60,131,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickPlayPause"
+                ClickMode="Press"
+                Foreground="#FF282828">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <Button Name="NextSongButton"
-        BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickNextSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="15" VerticalAlignment="Top" Margin="0,60,50,0">
+            <Button
+                Name="NextSongButton"
+                Width="11"
+                Height="15"
+                Margin="0,60,50,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickNextSong"
+                ClickMode="Press"
+                Foreground="#FF282828">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/forward-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/forward-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <Button Name="PreviousSongButton"
-        BorderBrush="Black" BorderThickness="0" 
-        Click="OnClickPreviousSong" ClickMode="Press" HorizontalAlignment="Right" Width="11" Height="16" VerticalAlignment="Top" Margin="0,59,212,0">
+            <Button
+                Name="PreviousSongButton"
+                Width="11"
+                Height="16"
+                Margin="0,59,212,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="{x:Null}"
+                BorderThickness="0"
+                Click="OnClickPreviousSong"
+                ClickMode="Press"
+                Foreground="#FF282828">
                 <Button.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="-360"/>
-                        <TranslateTransform/>
+                        <ScaleTransform />
+                        <SkewTransform />
+                        <RotateTransform Angle="-360" />
+                        <TranslateTransform />
                     </TransformGroup>
                 </Button.RenderTransform>
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/back-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/back-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <Button x:Name="PauseButton" IsEnabled="False" Visibility="Hidden"
-            BorderBrush="Black" BorderThickness="0" 
-            Click="OnClickPlayPause" ClickMode="Press" HorizontalAlignment="Right" Width="9" Height="15" VerticalAlignment="Top" Margin="0,60,131,0">
+            <Button
+                x:Name="PauseButton"
+                Width="9"
+                Height="15"
+                Margin="0,60,131,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderBrush="Black"
+                BorderThickness="0"
+                Click="OnClickPlayPause"
+                ClickMode="Press"
+                IsEnabled="False"
+                Visibility="Hidden">
                 <Button.Background>
-                    <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="Assets/Images/Icons/pause-icon.png" Stretch="Uniform" />
                 </Button.Background>
             </Button>
-            <TextBlock Name="ArtistText" Margin="92,20,15,56" FontFamily="Lato Light" Foreground="White" FontSize="14"></TextBlock>
-            <TextBlock Name="ContextText" Margin="92,36,15,40" FontFamily="Lato Light" Foreground="White" FontSize="12"></TextBlock>
-            <!-- <Button x:Name="EditorButton" 
-                BorderBrush="Black" BorderThickness="0" 
+            <TextBlock
+                Name="ArtistText"
+                Margin="92,20,15,56"
+                FontFamily="Lato Light"
+                FontSize="14"
+                Foreground="White" />
+            <TextBlock
+                Name="ContextText"
+                Margin="92,36,15,40"
+                FontFamily="Lato Light"
+                FontSize="12"
+                Foreground="White" />
+            <!-- <Button x:Name="EditorButton"
+                BorderBrush="Black" BorderThickness="0"
                 Click="OnClickEditorButton" ClickMode="Press" HorizontalAlignment="Right" Width="5" Height="15" VerticalAlignment="Top" Margin="0,29,5,0" RenderTransformOrigin="0.5,0.5">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/Images/Icons/play-icon.png" Stretch="Uniform"/>
                 </Button.Background>
-            </Button> -->
+            </Button>-->
         </Grid>
     </DockPanel>
 </Window>
