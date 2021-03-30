@@ -366,6 +366,7 @@ namespace MiniSpotify
         public void Slider_DragCompleted(object a_sender, RoutedEventArgs a_args)
         {
             double sv = VolumeSlider.Value;
+            
             APIRequestor.Instance.VolumeChangedEvent(sv);
         }
     }
