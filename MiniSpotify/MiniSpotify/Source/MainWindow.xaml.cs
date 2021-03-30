@@ -1,4 +1,4 @@
-﻿using MiniSpotify.API.Impl;
+using MiniSpotify.API.Impl;
 using SpotifyAPI.Web.Models;
 using System;
 using System.Drawing;
@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Color = System.Windows.Media.Color;
+
 
 namespace MiniSpotify
 {
@@ -41,6 +42,11 @@ namespace MiniSpotify
             Closing += (e, f) => APIRequestor.Instance.Close();
         }
 
+        public void Slider(FullTrack a_latestTrack = null)
+        {
+
+        }
+
         public void UpdateUI(FullTrack a_latestTrack = null)
         {
             bool liked = APIRequestor.Instance.GetSongIsLiked();
@@ -62,7 +68,8 @@ namespace MiniSpotify
                     {
                         artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
                     }
-                }catch(NullReferenceException e)// ID returned a hard null and not normal null
+                }
+                catch (NullReferenceException e)// ID returned a hard null and not normal null
                 {
                     Console.WriteLine(e.StackTrace);
                     artworkURL = null;
@@ -70,17 +77,17 @@ namespace MiniSpotify
                 artworkURL = APIRequestor.Instance.GetSongArtwork(artworkURL);//Get the artwork url
             }
 
-            if(!string.IsNullOrEmpty(artworkURL))
+            if (!string.IsNullOrEmpty(artworkURL))
             {
                 UpdateDisplayImage(artworkURL);
             }
 
-            if(a_latestTrack == null)
+            if (a_latestTrack == null)
             {
                 a_latestTrack = APIRequestor.Instance.GetLatestTrack();
             }
 
-            if(a_latestTrack != null)
+            if (a_latestTrack != null)
             {
                 string trackName = a_latestTrack.Name;
                 string artists = a_latestTrack.Artists[0].Name;
@@ -288,7 +295,6 @@ namespace MiniSpotify
             editWindow.Left = editWindowX + m_editWindowGap;
         }
 
-
         #region Window Bar controls
         private void OnClickClose(object sender, RoutedEventArgs e)
         {
@@ -331,7 +337,7 @@ namespace MiniSpotify
 
         private void OnChangeWindowBackgroundColour(string a_colourHexCode)
         {
-            if(string.IsNullOrEmpty(a_colourHexCode))
+            if (string.IsNullOrEmpty(a_colourHexCode))
             {
                 Color val = (Color)ColorConverter.ConvertFromString(a_colourHexCode);
                 Application.Current.MainWindow.Background = new SolidColorBrush(val); ;
@@ -339,6 +345,28 @@ namespace MiniSpotify
         }
 
         #endregion
+        public void RepeatOnAction(object a_sender, RoutedEventArgs a_args)
+        {
+            RepeatOffButton.IsEnabled = false;
+            RepeatOffButton.Visibility = Visibility.Hidden;
+            RepeatOnButton.IsEnabled = true;
+            RepeatOnButton.Visibility = Visibility.Visible;
+            APIRequestor.Instance.RepeatSongOn();
+        }
 
+        public void RepeatOffAction(object a_sender, RoutedEventArgs a_args)
+        {
+            RepeatOffButton.IsEnabled = true;
+            RepeatOffButton.Visibility = Visibility.Visible;
+            RepeatOnButton.IsEnabled = false;
+            RepeatOnButton.Visibility = Visibility.Hidden;
+            APIRequestor.Instance.RepeatSongOff();
+        }
+
+        public void Slider_DragCompleted(object a_sender, RoutedEventArgs a_args)
+        {
+            double sv = VolumeSlider.Value;
+            APIRequestor.Instance.VolumeChangedEvent(sv);
+        }
     }
 }
