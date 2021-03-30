@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using MiniSpotify.API.Base;
 using MiniSpotify.HelperScripts;
 using SpotifyAPI.Web;
@@ -91,7 +91,7 @@ namespace MiniSpotify.API.Impl
                 auth.AuthReceived += async (sender, payload) =>
                 {
                     auth.Stop(); // `sender` is also the auth instance
-                    
+
                     m_instance.m_authToken = payload;
 
                     m_spotifyWebAPI = new SpotifyWebAPI()
@@ -100,7 +100,7 @@ namespace MiniSpotify.API.Impl
                         AccessToken = m_instance.m_authToken.AccessToken,
                         UseAuth = true
                     };
-                    
+
                     m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
                 };
 
@@ -124,7 +124,7 @@ namespace MiniSpotify.API.Impl
                 m_pollingTask = null;
             }
 
-            if(m_spotifyWebAPI != null)
+            if (m_spotifyWebAPI != null)
             {
                 m_spotifyWebAPI.Dispose();
                 m_spotifyWebAPI = null;
@@ -443,6 +443,22 @@ namespace MiniSpotify.API.Impl
 
                 await Task.Delay(m_songChangePollDelayMS);
             }
+        }
+        public void RepeatSongOn() //repeat the current track
+        {
+            m_spotifyWebAPI.SetRepeatMode(RepeatState.Track);
+        }
+        public void RepeatSongOff() //repeat the current track
+        {
+            m_spotifyWebAPI.SetRepeatMode(RepeatState.Off);
+        }
+
+        public void VolumeChangedEvent(double sv) //changed spotify volume not application volume
+        {
+            int val = Convert.ToInt32(sv);
+
+            Console.WriteLine(val);
+            m_spotifyWebAPI.SetVolume(val);
         }
     }
 }
