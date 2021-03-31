@@ -1,17 +1,24 @@
-﻿<Window x:Class="MiniSpotify.EditorWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MiniSpotify"
-        mc:Ignorable="d"
-        Title="Mini-Viewer" Height="110" Width="100" 
-        ResizeMode="NoResize" Topmost="True" BorderBrush="#232322" 
-        Background="#232322" FontFamily="Lato" WindowStyle="None">
+﻿<Window
+    x:Class="MiniSpotify.EditorWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MiniSpotify"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Mini-Viewer"
+    Width="100"
+    Height="110"
+    Background="#232322"
+    BorderBrush="#232322"
+    FontFamily="Lato"
+    ResizeMode="NoResize"
+    Topmost="True"
+    WindowStyle="None"
+    mc:Ignorable="d">
     <Grid>
         <Button Name="ColourWheelPicker">
             <Button.Background>
-                <ImageBrush/>
+                <ImageBrush />
             </Button.Background>
         </Button>
     </Grid>
