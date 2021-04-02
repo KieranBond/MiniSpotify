@@ -453,12 +453,12 @@ namespace MiniSpotify.API.Impl
             m_spotifyWebAPI.SetRepeatMode(RepeatState.Off);
         }
 
-        public void VolumeChangedEvent(double sv) //changed spotify volume not application volume
+        public void VolumeChangedEvent(double sliderval) //changed spotify volume not application volume
         {
-            int val = Convert.ToInt32(sv);
+            int sliderint = Convert.ToInt32(sliderval);
 
-            Console.WriteLine(val);
-            m_spotifyWebAPI.SetVolume(val);
+            Console.WriteLine(sliderint);
+            m_spotifyWebAPI.SetVolume(sliderint);
         }
     }
 }
