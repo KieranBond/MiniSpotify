@@ -1,20 +1,11 @@
-﻿using Microsoft.Win32;
-using MiniSpotify.API.Base;
-using MiniSpotify.HelperScripts;
+﻿using MiniSpotify.API.Base;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
-using SpotifyAPI.Web.Enums;
-using SpotifyAPI.Web.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MiniSpotify.API.Impl
 {
@@ -54,20 +45,24 @@ namespace MiniSpotify.API.Impl
         private string m_albumimage = "";
 
         //https://developer.spotify.com/documentation/general/guides/scopes/
-        private Scope m_accessScopes = Scope.UserModifyPlaybackState | Scope.Streaming | Scope.UserReadRecentlyPlayed | Scope.UserReadCurrentlyPlaying | Scope.UserReadPlaybackState | Scope.UserLibraryModify | Scope.UserLibraryRead;
+        private string[] m_accessScopes = new string[]
+        {
+            Scopes.UserModifyPlaybackState,
+            Scopes.Streaming,
+            Scopes.UserReadRecentlyPlayed,
+            Scopes.UserReadCurrentlyPlaying,
+            Scopes.UserReadPlaybackState,
+            Scopes.UserLibraryModify,
+            Scopes.UserLibraryRead
+        };
+
         private HttpClient m_webClient;
-        private static SpotifyWebAPI m_spotifyWebAPI;
-        private Token m_authToken;
+        private static SpotifyClient m_spotifyWebAPI;
+        private string m_authToken;
 
         public void Initialise()
         {
             m_instance = new APIRequestor();
-
-            //string secret = FileHelper.GetFileText(m_clientSecretPath);
-            //if (!string.IsNullOrEmpty(secret))
-            //{
-            //    m_instance.m_clientSecret = secret;
-            //}
 
             AuthAPI();
         }
@@ -78,34 +73,34 @@ namespace MiniSpotify.API.Impl
             //https://github.com/JohnnyCrazy/SpotifyAPI-NET
             //https://johnnycrazy.github.io/SpotifyAPI-NET/auth/implicit_grant.html
 
-            if (m_instance.m_authToken == null || m_instance.m_authToken.IsExpired())
+            if (string.IsNullOrWhiteSpace(m_authToken))
             {
-                string redirectURI = "http://localhost:4002";
+                int redirectPort = 5000;
+                string redirectURI = $"http://localhost:{redirectPort}";
 
-                ImplicitGrantAuth auth = new ImplicitGrantAuth(
-                        m_instance.m_clientID,
-                        redirectURI,
-                        redirectURI,
-                        m_accessScopes);
+                var server = new EmbedIOAuthServer(new Uri(redirectURI), redirectPort);
+                await server.Start();
 
-                auth.AuthReceived += async (sender, payload) =>
+                var auth = new LoginRequest(
+                    new Uri(redirectURI),
+                    m_instance.m_clientID,
+                    LoginRequest.ResponseType.Token)
                 {
-                    auth.Stop(); // `sender` is also the auth instance
-                    
-                    m_instance.m_authToken = payload;
+                    Scope = m_accessScopes,
+                };
 
-                    m_spotifyWebAPI = new SpotifyWebAPI()
-                    {
-                        TokenType = m_instance.m_authToken.TokenType,
-                        AccessToken = m_instance.m_authToken.AccessToken,
-                        UseAuth = true
-                    };
+                server.ImplictGrantReceived += async (sender, response) =>
+                {
+                    await server.Stop();
+
+                    m_instance.m_authToken = response.AccessToken;
                     
+                    m_spotifyWebAPI = new SpotifyClient(m_instance.m_authToken);
+
                     m_instance.m_pollingTask = Task.Run(PollSongChange);//Start the song change polling
                 };
 
-                auth.Start();//Starts an internal http server
-                auth.OpenBrowser();//Opens browser to authenticate app
+                BrowserUtil.Open(auth.ToUri());
             }
         }
 
