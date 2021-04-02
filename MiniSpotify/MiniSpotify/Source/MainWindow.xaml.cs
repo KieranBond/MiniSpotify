@@ -42,11 +42,6 @@ namespace MiniSpotify
             Closing += (e, f) => APIRequestor.Instance.Close();
         }
 
-        public void Slider(FullTrack a_latestTrack = null)
-        {
-
-        }
-
         public void UpdateUI(FullTrack a_latestTrack = null)
         {
             bool liked = APIRequestor.Instance.GetSongIsLiked();
