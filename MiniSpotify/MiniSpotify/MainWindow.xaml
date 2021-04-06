@@ -95,7 +95,8 @@
                 BorderBrush="{x:Null}"
                 BorderThickness="0"
                 Foreground="#FF1DB954"
-                Value="0" />
+                Value="0"
+                Maximum="1" />
             <Button
                 Name="LikeSongButton"
                 Width="16"

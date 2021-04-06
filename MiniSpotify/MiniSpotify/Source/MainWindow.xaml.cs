@@ -1,6 +1,4 @@
-﻿using MiniSpotify.API.Impl;
-using SpotifyAPI.Web.Models;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,6 +9,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Color = System.Windows.Media.Color;
+using MiniSpotify.Source.Interfaces;
+using TinYard.Framework.Impl.Attributes;
+using SpotifyAPI.Web;
+using MiniSpotify.Source.VO;
 
 namespace MiniSpotify
 {
@@ -19,6 +21,10 @@ namespace MiniSpotify
     /// </summary>
     public partial class MainWindow : Window
     {
+        [Inject]
+        public ISpotifyService Service { get; private set; }
+        
+        private FullTrack _latestSong;
         private bool m_pinnedToTop = true;
 
         private bool m_editWindowOpen = false;
@@ -32,123 +38,66 @@ namespace MiniSpotify
             editWindow = new EditorWindow();
             editWindow.Hide();
 
-            APIRequestor.Instance.m_onSongChanged += OnSongChanged;
-            APIRequestor.Instance.m_onAuthComplete += UpdateUI;
-            APIRequestor.Instance.m_onAPIPolled += UpdateUI;
-
             LocationChanged += UpdateEditWindowPosition;
-
-            Closing += (e, f) => APIRequestor.Instance.Close();
         }
 
-        public void UpdateUI(FullTrack a_latestTrack = null)
+        public void Setup()
         {
-            bool liked = APIRequestor.Instance.GetSongIsLiked();
-            UpdateLikeIcon(liked);
+            Service.OnPlaybackUpdated += OnPlaybackUpdated;
+            Closing += (e, f) => Service.Disconnect();
+        }
 
-            bool playing = APIRequestor.Instance.GetIsPlaying();
-            UpdatePlayIcon(playing);
+        private void OnPlaybackUpdated(ContextualUpdateVO playingContext)
+        {
+            UpdateProgressBar(playingContext.latestSongProgress);
+            UpdatePlayIcon(playingContext.IsSongPlaying);
+            UpdateLikeIcon(playingContext.IsSongLiked);
 
-            float progress = APIRequestor.Instance.GetLatestSongProgress();
-            UpdateProgressBar(progress);
-
-            string artworkURL = APIRequestor.Instance.GetCurrentSongArtwork();
-            if (string.IsNullOrEmpty(artworkURL))
+            //We don't need to update these every time
+            if(_latestSong != playingContext.LatestSong)
             {
-                Console.WriteLine("No track playing. Getting last track.");
-                try
-                {
-                    if (APIRequestor.Instance.GetLatestTrack().Id != null)
-                    {
-                        artworkURL = APIRequestor.Instance.GetLatestTrack().Id;//Get the track ID
-                    }
-                }catch(NullReferenceException e)// ID returned a hard null and not normal null
-                {
-                    Console.WriteLine(e.StackTrace);
-                    artworkURL = null;
-                }
-                artworkURL = APIRequestor.Instance.GetSongArtwork(artworkURL);//Get the artwork url
-            }
+                UpdateDisplayImage(playingContext.LatestSongArtworkURL);
+                UpdateTrackName(playingContext.LatestSong);
+                UpdateArtists(playingContext.LatestSong);
+                UpdatePlaybackContext(playingContext.PlaybackContext);
 
-            if(!string.IsNullOrEmpty(artworkURL))
-            {
-                UpdateDisplayImage(artworkURL);
-            }
-
-            if(a_latestTrack == null)
-            {
-                a_latestTrack = APIRequestor.Instance.GetLatestTrack();
-            }
-
-            if(a_latestTrack != null)
-            {
-                string trackName = a_latestTrack.Name;
-                string artists = a_latestTrack.Artists[0].Name;
-                string context = APIRequestor.Instance.GetPlaybackContext();
-
-                for (int i = 1; i < a_latestTrack.Artists.Count; i++)
-                {
-                    artists = string.Concat(artists, ", ", a_latestTrack.Artists[i].Name);
-                }
-
-                this.Dispatcher.Invoke(() =>
-                {
-                    //Update any UI in this block.
-                    TitleText.Text = a_latestTrack.Name;
-                    ArtistText.Text = artists;
-                    ContextText.Text = context;
-                });
+                _latestSong = playingContext.LatestSong;
             }
         }
 
-        private void OnSongChanged(FullTrack a_latestTrackPlaying)
+        private void UpdatePlaybackContext(string playbackContext)
         {
-            string artworkURL = APIRequestor.Instance.GetCurrentSongArtwork();
-            if (string.IsNullOrEmpty(artworkURL))
-            {
-                Console.WriteLine("No track playing. Cannot update image.");
-            }
-            else
-            {
-                UpdateDisplayImage(artworkURL);
-            }
-
-            string trackName = a_latestTrackPlaying.Name;
-            string artists = a_latestTrackPlaying.Artists[0].Name;
-            string context = APIRequestor.Instance.GetPlaybackContext();
-
-            for (int i = 1; i < a_latestTrackPlaying.Artists.Count; i++)
-            {
-                artists = string.Concat(artists, ", ", a_latestTrackPlaying.Artists[i].Name);
-            }
-
             this.Dispatcher.Invoke(() =>
             {
-                //Update any UI in this block.
-                TitleText.Text = a_latestTrackPlaying.Name;
-                ArtistText.Text = artists;
-                ContextText.Text = context;
+                ContextText.Text = playbackContext;
             });
         }
 
         public void OnClickLike(object a_sender, RoutedEventArgs a_args)
         {
-            UpdateLikeIcon(APIRequestor.Instance.ModifyLike());
+            Service.ToggleLikeCurrentSong();
         }
 
         public void OnClickPlayPause(object a_sender, RoutedEventArgs a_args)
         {
-            APIRequestor.Instance.ModifyPlayback();//Returns true if now playing, else false
-            UpdatePlayIcon(APIRequestor.Instance.GetIsPlaying());
+            Service.TogglePlayingStatus();
         }
 
         public void OnClickNextSong(object a_sender, RoutedEventArgs a_args)
         {
-            APIRequestor.Instance.SkipSongPlayback(true);
+            Service.PlayNextSong();
         }
+
         public void OnClickPreviousSong(object a_sender, RoutedEventArgs a_args)
         {
-            APIRequestor.Instance.SkipSongPlayback(false);
+            if(SongProgress.Value > 0f)
+            {
+                Service.RestartCurrentSong();
+            }
+            else
+            {
+                Service.PlayPreviousSong();
+            }
         }
 
         public void OnClickEditorButton(object a_sender, RoutedEventArgs a_args)
@@ -187,48 +136,46 @@ namespace MiniSpotify
             }
         }
 
-        private async void UpdateDisplayImage(string a_artworkURL)
+        private async void UpdateDisplayImage(string artworkUrl)
         {
-            if (!string.IsNullOrEmpty(a_artworkURL))
+            if (string.IsNullOrWhiteSpace(artworkUrl))
+                return;
+
+            Uri artworkAbsURI = new Uri(artworkUrl, UriKind.Absolute);
+
+            WebRequest request = WebRequest.Create(artworkAbsURI);
+            WebResponse response = await request.GetResponseAsync();
+
+            Stream responseStream = response.GetResponseStream();
+
+            Bitmap art = new Bitmap(responseStream);
+            BitmapImage bmpImage = new BitmapImage();
+
+            using (MemoryStream memory = new MemoryStream())
             {
-                Uri artworkAbsURI = new Uri(a_artworkURL, UriKind.Absolute);
-
-                WebRequest request = WebRequest.Create(artworkAbsURI);
-                WebResponse response = await request.GetResponseAsync();
-
-                Stream responseStream = response.GetResponseStream();
-
-                Bitmap art = new Bitmap(responseStream);
-                BitmapImage bmpImage = new BitmapImage();
-
-                using (MemoryStream memory = new MemoryStream())
-                {
-                    art.Save(memory, ImageFormat.Png);
-                    memory.Position = 0;
-                    bmpImage.BeginInit();
-                    bmpImage.StreamSource = memory;
-                    bmpImage.DecodePixelWidth = 512;
-                    bmpImage.DecodePixelHeight = 512;
-                    bmpImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bmpImage.EndInit();
-                }
-
-                bmpImage.Freeze();
-                this.Dispatcher.Invoke(() =>
-                {
-                    //Update any UI in this block.
-                    AlbumArtworkImage.Source = bmpImage;
-                });
-
+                art.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+                bmpImage.BeginInit();
+                bmpImage.StreamSource = memory;
+                bmpImage.DecodePixelWidth = 512;
+                bmpImage.DecodePixelHeight = 512;
+                bmpImage.CacheOption = BitmapCacheOption.OnLoad;
+                bmpImage.EndInit();
             }
-        }
 
-        private void UpdateProgressBar(float a_progress)
-        {
-            a_progress = 100 * a_progress;//a_progress is normalized between 0-1, *100 so that it's between 0 - 100
+            bmpImage.Freeze();
             this.Dispatcher.Invoke(() =>
             {
-                SongProgress.Value = a_progress;
+                //Update any UI in this block.
+                AlbumArtworkImage.Source = bmpImage;
+            });
+        }
+
+        private void UpdateProgressBar(float progress)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                SongProgress.Value = progress;
             });
         }
 
@@ -279,6 +226,29 @@ namespace MiniSpotify
                 }
             });
         }
+
+        private void UpdateTrackName(FullTrack a_latestTrackPlaying)
+        {
+            string trackName = a_latestTrackPlaying.Name;
+            this.Dispatcher.Invoke(() =>
+            {
+                TitleText.Text = a_latestTrackPlaying.Name;
+            });
+        }
+
+        private void UpdateArtists(FullTrack a_latestTrackPlaying)
+        {
+            string artists = a_latestTrackPlaying.Artists[0].Name;
+            for (int i = 1; i < a_latestTrackPlaying.Artists.Count; i++)
+            {
+                artists = string.Concat(artists, ", ", a_latestTrackPlaying.Artists[i].Name);
+            }
+            this.Dispatcher.Invoke(() =>
+            {
+                ArtistText.Text = artists;
+            });
+        }
+
         private void UpdateEditWindowPosition(object sender, EventArgs e)
         {
             double mainWidth = RootWindow.ActualWidth;
