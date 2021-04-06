@@ -1,11 +1,10 @@
-﻿using MiniSpotify.API.Impl;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MiniSpotify.Source.Interfaces;
 using System.Windows;
+using System.Windows.Navigation;
+using TinYard;
+using TinYard.API.Interfaces;
+using TinYard.Extensions.Bundles;
+using TinYard.Extensions.CallbackTimer;
 
 namespace MiniSpotify
 {
@@ -14,15 +13,33 @@ namespace MiniSpotify
     /// </summary>
     public partial class App : Application
     {
+        private IContext _context;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            APIRequestor.Instance.Initialise();
+            _context = new Context();
+            _context
+                .Install(new MVCBundle())
+                .Install(new CallbackTimerExtension())
+                .Configure(new MiniSpotifyConfig()
+                .OnServiceConnected(OnServiceReady));
+            
+            _context.Initialize();
+
         }
+
+        private void OnServiceReady()
+        {
+            var window = MainWindow as MainWindow;
+            _context.Injector.Inject(window);
+            window.Setup();
+        }
+
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            APIRequestor.Instance.Close();
+            _context.Mapper.GetMappingValue<ISpotifyService>()?.Disconnect();
         }
     }
 }
