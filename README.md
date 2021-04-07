@@ -1,4 +1,7 @@
 # MiniSpotify
+
+![preview](https://user-images.githubusercontent.com/23127446/113833754-f1e7ae80-9781-11eb-8c9d-6534837222df.png)
+
 A mini-player/viewer for Spotify, that gives you the information you want but in a smaller windowed package.
 
 This is just a little application, designed to pack spotify away neatly. It's mostly just for learning some bits, but it is also
