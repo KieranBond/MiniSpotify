@@ -13,20 +13,20 @@ Please note we have a code of conduct, please follow it in all your interactions
    variables, exposed ports, useful file locations and container parameters.
 3. Increase the version numbers in any examples files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. Once a Pull Request has been discussed and items discussed have been implemented/changed, an admin may approve and merge the Pull    Request into the target branch.
+4. Once a Pull Request has been discussed and items discussed have been implemented/changed, an admin may approve the PR. Once approved, merge the PR into the target branch at your leisure.
 
 ## Standards
 
 * Ensure that code contributed adheres to coding standards already visible in the codebase. 
  * An admin will ensure that code contributed follows these standards, and will comment on them in Pull requests if not followed - delaying code adjustments/contributions.
 
-* Ensure that Pull Requests are targeted to merge back into the `development` branch. Ideally, any changes you are making should be made on feature branches too unless discussed previously or are of small nature.
+* Ensure that Pull Requests are targeted to merge back into the `main` branch.
 
 ### Branch Standards
 
-Development should occur in feature or bug branches, branched from the latest commit on the `development` branch and kept up to date with the `development` branch as often as possible. 
+Development should occur in feature or bug branches, branched from the latest commit on the `main` branch and kept up to date with the `main` branch as often as possible. 
 
-`Master` is a protected branch, designed to only be merged into from `development` when a stable build is produced and tagged on the `development` branch. This build should then be added to the [Repositorys releases](https://github.com/KieranBond/MiniSpotify/releases).
+`main` is a protected branch, designed to only be merged into from Pull Requests when a stable build is produced from the PR branch. This build should then be added to the [Repositorys releases](https://github.com/KieranBond/MiniSpotify/releases).
 
 Branch names should be structured as so: `type/#relatedIssueNumber-feature-or-bug-name`.
 
@@ -35,16 +35,15 @@ Examples:
  * bug/#90-shuffle-button-crash
 
 ### Examples of behavior that contributes to creating a positive environment
-include:
-
+Including but limited to:
 * Using welcoming and inclusive language
 * Being respectful of differing viewpoints and experiences
 * Gracefully accepting constructive criticism
 * Focusing on what is best for the community
 * Showing empathy towards other community members
 
-### Examples of unacceptable behavior by participants include:
-
+### Examples of unacceptable behavior by participants
+Including but not limited to:
 * The use of sexualized language or imagery and unwelcome sexual attention or
 advances
 * Trolling, insulting/derogatory comments, and personal or political attacks
@@ -54,7 +53,7 @@ advances
 * Other conduct which could reasonably be considered inappropriate in a
   professional setting
   
-  ### Our Pledge
+### Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as
 contributors and maintainers pledge to making participation in our project and
