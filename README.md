@@ -6,7 +6,9 @@ A mini-player/viewer for Spotify, that gives you the information you want but in
 
 This is just a little application, designed to pack spotify away neatly so that you can focus on the things that matter whilst still controlling your music. 
 
-Written in C#; Implements [Johnny Crazy's Spotify API](https://github.com/JohnnyCrazy/SpotifyAPI-NET); UI via WPF.
+Written in C#.
+Utilizes [Johnny Crazy's Spotify API](https://github.com/JohnnyCrazy/SpotifyAPI-NET).
+UI via WPF.
 
 # Releases
 
