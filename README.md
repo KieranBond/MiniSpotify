@@ -6,8 +6,13 @@ A mini-player/viewer for Spotify, that gives you the information you want but in
 
 This is just a little application, designed to pack spotify away neatly so that you can focus on the things that matter whilst still controlling your music. 
 
-Written in C#.
-UI via WPF.
+## How to use
+
+Download the ZIP file in the latest release.
+
+Unpack/extract the ZIP. Run/double-click the 'MiniSpotify.exe' file.
+
+Voila!
 
 # Releases
 
@@ -30,3 +35,7 @@ Find the [Pull Request section here](CONTRIBUTING.md#pull-request-process)
 Feel free to [buy me a coffee!](https://www.buymeacoffee.com/KieranB) or contribute to the [Funding Pool on Paypal](https://paypal.me/pools/c/8lndfh7YyZ)
 
 It'll help me/us find more time to work on this and things like this.
+
+## LICENSE
+
+[MIT License](LICENSE)
