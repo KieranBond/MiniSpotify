@@ -149,10 +149,6 @@ namespace MiniSpotify.HelperScripts
                     break;
             }
 
-            //if (t > 1 && a_easing != EaseType.ElasticIn)
-            //    t = 1;
-            //else if (t < 0 && a_easing != EaseType.ElasticIn)
-            //    t = 0;
 
             return t;
         }
