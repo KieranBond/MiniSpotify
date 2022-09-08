@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using MiniSpotify.Source.Logging;
 
 namespace MiniSpotify.HelperScripts
 {
@@ -17,6 +18,8 @@ namespace MiniSpotify.HelperScripts
             {
                 Console.WriteLine("Failed to Load File at: " + a_filePath);
                 Console.WriteLine(e.Message);
+                FileLogger logs = new FileLogger();
+                logs.logError(e);
                 return null;
             }
         }
@@ -40,6 +43,8 @@ namespace MiniSpotify.HelperScripts
             {
                 Console.WriteLine("Failed to Load File at: " + a_filePath);
                 Console.WriteLine(e.Message);
+                FileLogger logs = new FileLogger();
+                logs.logError(e);
                 return false;
             }
         }

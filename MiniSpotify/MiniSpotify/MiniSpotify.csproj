@@ -93,6 +93,7 @@
     <Compile Include="Source\Helpers\FileHelper.cs" />
     <Compile Include="Source\Helpers\LerpEaser.cs" />
     <Compile Include="Source\Interfaces\ISpotifyService.cs" />
+    <Compile Include="Source\Logging\FileLogger.cs" />
     <Compile Include="Source\MainWindow.xaml.cs" />
     <Compile Include="Source\Impl\SpotifyService.cs" />
     <Compile Include="Source\VO\ContextualUpdateVO.cs" />
