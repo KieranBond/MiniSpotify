@@ -188,7 +188,7 @@ namespace MiniSpotify.Source.Impl
             {
                 // TODO : Add error handling / logging
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
                 return null;
             }
 
@@ -210,7 +210,7 @@ namespace MiniSpotify.Source.Impl
             catch (Exception e)
             {
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
                 return false;
             }
         }
@@ -261,7 +261,7 @@ namespace MiniSpotify.Source.Impl
             catch (Exception e)
             {
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
                 return false;
             }
         }
@@ -280,7 +280,7 @@ namespace MiniSpotify.Source.Impl
             catch (Exception e)
             {
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
                 return false;
             }
         }
@@ -295,7 +295,7 @@ namespace MiniSpotify.Source.Impl
             {
                 // TODO : Log something
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
             }
         }
 
@@ -307,9 +307,8 @@ namespace MiniSpotify.Source.Impl
             }
             catch (Exception e)
             {
-                // TODO : Log something
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
             }
         }
 
@@ -321,9 +320,8 @@ namespace MiniSpotify.Source.Impl
             }
             catch (Exception e)
             {
-                // TODO : Log something
                 FileLogger logs = new FileLogger();
-                logs.logError(e);
+                logs.LogError(e);
             }
         }
     }

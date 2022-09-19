@@ -6,15 +6,15 @@ namespace MiniSpotify.Source.Logging
 {
     public class FileLogger
     {
-        public void logError(Exception ex)
+        public void LogError(Exception ex, string info = null)
         {
             var currentDate = DateTime.Now;
             var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentDate.Month);
 
             var root = AppDomain.CurrentDomain.BaseDirectory + "\\logs";
-            var yearPath = root + "\\" + currentDate.Year.ToString() + "\\";
-            var MonthPath = yearPath + currentDate.Year + "-" + monthName + "\\";
-            var errorFile = MonthPath + "ErrorLogs-" + String.Format("{0:d-M-yyyy}", currentDate.Date) + ".txt";
+            var yearPath = Path.Combine(root, currentDate.Year.ToString());
+            var monthPath = Path.Combine(yearPath, currentDate.Year, "-", monthName);
+            var errorFilePath = Path.Combine(monthPath, "ErrorLogs-", String.Format("{0:d-M-yyyy}", currentDate.Date), ".txt");
 
             if (!Directory.Exists(root))
             {
@@ -24,24 +24,22 @@ namespace MiniSpotify.Source.Logging
             {
                 Directory.CreateDirectory(yearPath);
             }
-            if (!Directory.Exists(MonthPath))
+            if (!Directory.Exists(monthPath))
             {
-                Directory.CreateDirectory(MonthPath);
+                Directory.CreateDirectory(monthPath);
             }
-            if (!File.Exists(errorFile))
+            if (!File.Exists(errorFilePath))
             {
-                FileStream fs = File.Create(errorFile);
-                fs.Close();
+                using(var _ = File.Create(errorFilePath));
             }
-            using (StreamWriter sw = File.AppendText(errorFile))
+            using (var sw = File.AppendText(errorFilePath))
             {
                 sw.WriteLine();
                 sw.WriteLine("=============Error Logging ===========");
                 sw.WriteLine("===========Start============= " + currentDate);
-                sw.WriteLine("Error Message: ");
-                sw.WriteLine(ex.Message);
-                sw.WriteLine("Stack Trace: ");
-                sw.WriteLine(ex.StackTrace);
+                if( !String.IsNullOrWhitespace(info) ) sw.WriteLine($"Extra information: \n{info}");
+                sw.WriteLine($"Error Message: \n{ex.Message}");
+                sw.WriteLine($"Stack Trace: \n{ex.StackTrace}");
                 sw.WriteLine("===========End============= " + currentDate);
                 sw.WriteLine();
             }
