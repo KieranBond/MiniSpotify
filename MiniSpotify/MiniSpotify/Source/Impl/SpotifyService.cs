@@ -1,6 +1,7 @@
 ﻿using MiniSpotify.HelperScripts;
 using MiniSpotify.Source.Interfaces;
 using MiniSpotify.Source.VO;
+using MiniSpotify.Source.Logging;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using System;
@@ -183,9 +184,11 @@ namespace MiniSpotify.Source.Impl
             {
                 currentPlayback = await _spotifyClient.Player.GetCurrentPlayback();
             }
-            catch
+            catch (Exception e)
             {
                 // TODO : Add error handling / logging
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
                 return null;
             }
 
@@ -204,8 +207,10 @@ namespace MiniSpotify.Source.Impl
 
                 return fullPlaylist.Any(track => track.Track.Id == song.Id);
             }
-            catch
+            catch (Exception e)
             {
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
                 return false;
             }
         }
@@ -253,8 +258,10 @@ namespace MiniSpotify.Source.Impl
 
                 return await IsSongLiked(currentSong);
             }
-            catch
+            catch (Exception e)
             {
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
                 return false;
             }
         }
@@ -270,8 +277,10 @@ namespace MiniSpotify.Source.Impl
                     await _spotifyClient.Player.ResumePlayback();
                 return (await GetCurrentPlayback()).IsPlaying;
             }
-            catch
+            catch (Exception e)
             {
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
                 return false;
             }
         }
@@ -282,9 +291,11 @@ namespace MiniSpotify.Source.Impl
             {
                 await _spotifyClient.Player.SkipNext();
             }
-            catch
+            catch (Exception e)
             {
                 // TODO : Log something
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
             }
         }
 
@@ -294,9 +305,10 @@ namespace MiniSpotify.Source.Impl
             {
                 await _spotifyClient.Player.SkipPrevious();
             }
-            catch
+            catch (Exception e)
             {
-                // TODO : Log something
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
             }
         }
 
@@ -306,9 +318,10 @@ namespace MiniSpotify.Source.Impl
             {
                 await _spotifyClient.Player.SeekTo(new PlayerSeekToRequest(0));
             }
-            catch
+            catch (Exception e)
             {
-
+                FileLogger logs = new FileLogger();
+                logs.LogError(e);
             }
         }
     }
